@@ -89,31 +89,7 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
             {
                 return errorCode.INPUT_ERROR;
             }
-
-            //Prepare RealTime file
-            foreach (int i in jobsToExec)
-            {
-                RealTimeData.Add(new RealTimeDataModel());
-                RealTimeData[indRTime].SaveData = BackupJobsData[i];
-                RealTimeData[indRTime].State = "WAITING";
-                if (Directory.Exists(BackupJobsData[i].Source))
-                {
-                    totalNbFile = 0;
-                    totalSaveSize = 0;
-                    delegCopy = GetDirectoryInfo;
-                    SaveDir(BackupJobsData[i].Source, BackupJobsData[i].Destination);
-                    RealTimeData[indRTime].TotalFilesSize = totalSaveSize;
-                    RealTimeData[indRTime].TotalFilesToCopy = totalNbFile;
-                }
-                else if (File.Exists(BackupJobsData[i].Source))
-                {
-                    RealTimeData[indRTime].TotalFilesSize = new FileInfo(BackupJobsData[i].Source).Length;
-                    RealTimeData[indRTime].TotalFilesToCopy = 1;
-                }
-                indRTime++;
-            }
-            RealTime.WriteRealTimeFile(RealTimeData);
-
+            SetupRealTime(jobsToExec);
             indRTime = 0;
             foreach (int i in jobsToExec) 
             {
@@ -210,6 +186,31 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
             {
                 CopyFile(file, destination);
             }
+        }
+        private void SetupRealTime(List<int> jobsToExec)
+        {
+            foreach (int i in jobsToExec)
+            {
+                RealTimeData.Add(new RealTimeDataModel());
+                RealTimeData[indRTime].SaveData = BackupJobsData[i];
+                RealTimeData[indRTime].State = "WAITING";
+                if (Directory.Exists(BackupJobsData[i].Source))
+                {
+                    totalNbFile = 0;
+                    totalSaveSize = 0;
+                    delegCopy = GetDirectoryInfo;
+                    SaveDir(BackupJobsData[i].Source, BackupJobsData[i].Destination);
+                    RealTimeData[indRTime].TotalFilesSize = totalSaveSize;
+                    RealTimeData[indRTime].TotalFilesToCopy = totalNbFile;
+                }
+                else if (File.Exists(BackupJobsData[i].Source))
+                {
+                    RealTimeData[indRTime].TotalFilesSize = new FileInfo(BackupJobsData[i].Source).Length;
+                    RealTimeData[indRTime].TotalFilesToCopy = 1;
+                }
+                indRTime++;
+            }
+            RealTime.WriteRealTimeFile(RealTimeData);
         }
     }
 }
