@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text.Json;
+using System.Xml;
 
 namespace PROGRAMMATION_SYST_ME.Model
 {
@@ -9,18 +10,48 @@ namespace PROGRAMMATION_SYST_ME.Model
     /// </summary>
     class LogModel
     {
-        private readonly string logFolder;
-        private readonly string logFile;
+        public XmlDocument Xml { set; get; } = new XmlDocument();
+        private string logFolder;
+        private string logFile;
+        private readonly string xmlPath;
+        public string ExtLog { get; set; }
         public int NbJobs { set; get; }
         /// <summary>
         /// When creating a .json log file, the name is automatimacally generated to match the current date
         /// </summary>
         public LogModel()
         {
+            xmlPath = Path.Combine(Environment.CurrentDirectory, @"SaveJobsConfig.xml");
+            // if the selected path is found, proceed. otherwise raise an error.
+            try
+            {
+                Xml.Load(xmlPath);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error : {e}");
+                Environment.Exit(3);
+            }
+            createLogFile();
+        }
+
+        public void createLogFile()
+        {
+            
+            string ExtLog = Xml.SelectSingleNode("/root/ExtLog").InnerText;
             logFolder = Path.Combine(Environment.CurrentDirectory, "logs");
             if (!Directory.Exists(logFolder))
                 Directory.CreateDirectory(logFolder);
-            logFile = Path.Combine(logFolder, DateTime.Now.Day.ToString() + "_" + DateTime.Now.Month.ToString() + "_" + DateTime.Now.Year.ToString() + ".json");
+            logFile = Path.Combine(logFolder, DateTime.Now.Day.ToString() + "_" + DateTime.Now.Month.ToString() + "_" + DateTime.Now.Year.ToString() + "." + ExtLog);
+        }
+
+        public void ChangeExtensionLog(string extLog)
+        {
+            
+            ExtLog = extLog;
+            Xml.SelectSingleNode("/root/ExtLog").InnerText = ExtLog;
+            Xml.Save(xmlPath);
+            createLogFile();
         }
         /// <summary>
         /// Method to write our logs' content
@@ -48,4 +79,6 @@ namespace PROGRAMMATION_SYST_ME.Model
         public long SaveSize { get; set;}
         public string Time { get; set;}
     }
+
+
 }

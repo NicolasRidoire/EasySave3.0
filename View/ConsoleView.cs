@@ -28,7 +28,7 @@ namespace PROGRAMMATION_SYST_ME.View
             {
                 Console.WriteLine(job.Id + 1 + " -> " + job.Name);
             }
-            Console.WriteLine("Choose between U (Update backup jobs) or E (Execute backup jobs) or Q (Quit) : ");
+            Console.WriteLine("Choose between U (Update backup jobs) or E (Execute backup jobs) or Q (Quit) or L (Logs extension): ");
             var choice = Console.ReadLine();
             switch (choice)
             {
@@ -41,6 +41,10 @@ namespace PROGRAMMATION_SYST_ME.View
                 case "Q":
                     error = errorCode.NORMAL_EXIT;
                     break;
+                case "L":
+                    UpdateLogExtension();
+                    break;
+
                 default:
                     error = errorCode.INPUT_ERROR;
                     break;
@@ -120,12 +124,17 @@ namespace PROGRAMMATION_SYST_ME.View
                 error = errorCode.INPUT_ERROR;
                 return;
             }
-            if (change == "Q")
-                return;
-            Console.Write("New value : ");
-            if (change == "T")
-                Console.WriteLine(" (0 for full backup or 1 for differencial backup)");
-            
+            switch (change)
+            {
+                case "Q":
+                    return;
+                case "T":
+                    Console.Write("New value: ");
+                    Console.WriteLine(" (0 for full backup or 1 for differential backup)");
+                    break;
+                
+            }
+
             var newValue = Console.ReadLine();
             if (!IsValidNewValue(newValue, change))
             {
@@ -142,6 +151,26 @@ namespace PROGRAMMATION_SYST_ME.View
                 ShowParam(jobChoice);
                 UpdateChoice();
             }
+        }
+        /// <summary>
+        /// method that allows the user to select the extension of the log file
+        /// </summary>
+        public void UpdateLogExtension()
+        {
+            Console.WriteLine("Select the extension of the log file (xml or json) : ");
+            var extension = Console.ReadLine();
+            if (extension == "xml" || extension == "json")
+            {
+                userInteract.ChangeExtensionLog(extension);
+                Console.WriteLine("Extension changed to : " + extension);
+            }
+            else
+            {
+                error = errorCode.INPUT_ERROR;
+                return;
+            }
+            Console.WriteLine("press any key to continue");
+            Console.ReadKey();
         }
         /// <summary>
         /// Private method that shows the current backup job's properties
