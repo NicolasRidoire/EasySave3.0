@@ -67,7 +67,36 @@ namespace PROGRAMMATION_SYST_ME.View
         /// <summary>
         /// Method that allows the user to select which backup job he'd like to modify
         /// </summary>
-        public void UpdateChoice() 
+        public void UpdateChoice()
+        {
+            Console.WriteLine("Choose between : \n" +
+                "C -> Create a backup job\n" +
+                "M -> Modify a backup job\n" +
+                "D -> Delete a backup job\n" +
+                "Q -> Quit");
+            switch (Console.ReadLine()) 
+            {
+                case "C":
+                    CreateJob();
+                    break;
+                case "M":
+                    ModifyJob();
+                    break;
+                case "D":
+
+                    break;
+                case "Q":
+                    break;
+                default:
+                    error = errorCode.INPUT_ERROR;
+                    break;
+            }
+        }
+        public void CreateJob()
+        {
+            Console.WriteLine("");
+        }
+        public void ModifyJob() 
         {
             Console.WriteLine("Select the backup job to modify (Between 1 to 5) : ");
             int jobChoice;

@@ -43,7 +43,7 @@ namespace PROGRAMMATION_SYST_ME.Model
         public void SaveParam(List<BackupJobDataModel> jobList)
         {
             var i = 0;
-            foreach (XmlNode node in Xml.DocumentElement)
+            foreach (XmlNode node in Xml.DocumentElement.SelectNodes("saveJob"))
             {
                 node.ChildNodes[0].InnerText = jobList[i].Id.ToString();
                 node.ChildNodes[1].InnerText = jobList[i].Name;
