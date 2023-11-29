@@ -7,19 +7,13 @@ Bienvenue dans EasySave, une application de sauvegarde simple en ligne de comman
 ## Installation
 Clonez ce référentiel :
 
-`
-Copy code
-git clone [lien du référentiel]
-cd EasySave
-Assurez-vous d'avoir .Net Core installé. Sinon, téléchargez-le depuis le site officiel.`
+`Copy code`
 
-Installez les dépendances :
+`git clone [lien du référentiel]`
 
+`cd EasySave`
 
-Copy code
-dotnet restore
-Configuration
-Éditez le fichier de configuration appsettings.json pour définir les répertoires et les paramètres nécessaires.
+Assurez-vous d'avoir .Net Core installé. Sinon, téléchargez-le depuis le site officiel.
 
 Assurez-vous que les emplacements des fichiers de journal (log.json) et d'état (state.json) sont adaptés aux serveurs des clients.
 
@@ -27,17 +21,19 @@ Assurez-vous que les emplacements des fichiers de journal (log.json) et d'état 
 
 Exécution de sauvegardes :
 
-`
-Copy code
-dotnet run -- backup 1-3`
-Exécute automatiquement les sauvegardes 1 à 3.
-Exécution séquentielle :
+## Gestion d'erreur
+Success Exit: `errorCode.SUCCESS`
 
-`
-Copy code
-dotnet run -- backup 1 ;3`
+Successful exit from the program.
+Normal Exit: `errorCode.NORMAL_EXIT`
 
-Exécute automatiquement les sauvegardes 1 et 3.
+Normal exit from the program.
+Input Error: `errorCode.INPUT_ERROR`
+
+Invalid user input.
+Source Error: `errorCode.SOURCE_ERROR`
+
+Source directory not found.
 
 ## Fonctionnalités
 
