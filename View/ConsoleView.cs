@@ -81,6 +81,8 @@ namespace PROGRAMMATION_SYST_ME.View
                 case "D":
 
                     break;
+                case "Q":
+                    break;
                 default:
                     error = errorCode.INPUT_ERROR;
                     break;

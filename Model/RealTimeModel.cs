@@ -2,32 +2,30 @@
 using System;
 using PROGRAMMATION_SYST_ME.Model;
 using System.Text.Json;
+using System.Collections.Generic;
 
 namespace PROGRAMMATION_SYST_ME.Model
 {
     internal class RealTimeModel
     {
-        public DataJSON RealTime { get; set; } = new DataJSON();
         private readonly string realTimeFile;
-        RealTimeModel()
+        public RealTimeModel()
         {
             realTimeFile = Path.Combine(Environment.CurrentDirectory, @"logs", @"State.json");
-            if (!Directory.Exists(realTimeFile))
-                Directory.CreateDirectory(realTimeFile);
         }
-        public void WriteRealTimeFile()
+        public void WriteRealTimeFile(List<RealTimeDataModel> RealTime)
         {
             var jsonString = JsonSerializer.Serialize(RealTime, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(realTimeFile, jsonString);
         }
     }
-    internal class DataJSON
+    internal class RealTimeDataModel
     {
-        public BackupJobDataModel RealTimeData { get; set; }
+        public BackupJobDataModel SaveData { get; set; }
         public string State { get; set; }
-        public int TotalFilesToCopy { get; set; }
-        public int TotalFilesSize { get; set; }
-        public int NbFilezLeftToDo { get; set; }
-        public float Progression { get; set; }
+        public long TotalFilesToCopy { get; set; }
+        public long TotalFilesSize { get; set; }
+        public long NbFilezLeftToDo { get; set; }
+        public double Progression { get; set; }
     }
 }

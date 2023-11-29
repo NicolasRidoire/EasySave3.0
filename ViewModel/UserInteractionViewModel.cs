@@ -11,9 +11,14 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
     {
         public List<BackupJobDataModel> BackupJobsData { set; get; } = new List<BackupJobDataModel>();
         public BackupJobModel BackupJobs { set; get; }
+        public List<RealTimeDataModel> RealTimeData { set; get; } = new List<RealTimeDataModel>();
+        public RealTimeModel RealTime { set; get; } = new RealTimeModel();
         public LogModel LogFile { set; get; } = new LogModel();
         private readonly StatusView statusView = new StatusView();
         private long totalSaveSize = 0;
+        private long totalNbFile = 0;
+        private long NbFilesCopied = 0;
+        private int indRTime = 0;
         private delegate void CopyType(FileInfo file, string destination);
         CopyType delegCopy;
         public UserInteractionViewModel() 
@@ -79,15 +84,45 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
                 jobsToExec.Add(int.Parse(selection) - 1);
             }
             else if (selection == "Q")
-                return global::errorCode.SUCCESS;
+                return errorCode.SUCCESS;
             else
             {
-                return global::errorCode.INPUT_ERROR;
+                return errorCode.INPUT_ERROR;
             }
-            foreach (int i in jobsToExec) // Utilisation de foreach
-            { 
+
+            //Prepare RealTime file
+            foreach (int i in jobsToExec)
+            {
+                RealTimeData.Add(new RealTimeDataModel());
+                RealTimeData[indRTime].SaveData = BackupJobsData[i];
+                RealTimeData[indRTime].State = "WAITING";
+                if (Directory.Exists(BackupJobsData[i].Source))
+                {
+                    totalNbFile = 0;
+                    totalSaveSize = 0;
+                    delegCopy = GetDirectoryInfo;
+                    SaveDir(BackupJobsData[i].Source, BackupJobsData[i].Destination);
+                    RealTimeData[indRTime].TotalFilesSize = totalSaveSize;
+                    RealTimeData[indRTime].TotalFilesToCopy = totalNbFile;
+                }
+                else if (File.Exists(BackupJobsData[i].Source))
+                {
+                    RealTimeData[indRTime].TotalFilesSize = new FileInfo(BackupJobsData[i].Source).Length;
+                    RealTimeData[indRTime].TotalFilesToCopy = 1;
+                }
+                indRTime++;
+            }
+            RealTime.WriteRealTimeFile(RealTimeData);
+
+            indRTime = 0;
+            foreach (int i in jobsToExec) 
+            {
+                NbFilesCopied = 0;
                 if (error == errorCode.SUCCESS)
                 {
+                    RealTimeData[indRTime].State = "ACTIVE";
+                    RealTime.WriteRealTimeFile(RealTimeData);
+
                     statusView.JobStart(BackupJobsData[i].Name);
                     var watch = System.Diagnostics.Stopwatch.StartNew();
                     totalSaveSize = 0;
@@ -118,16 +153,28 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
                     );
 
                     if (error == errorCode.SUCCESS)
+                    {
                         statusView.JobStop(BackupJobsData[i].Name, watch.ElapsedMilliseconds);
+                        RealTimeData[indRTime].State = "SUCCESSFUL";
+                    }
+                    else
+                        RealTimeData[indRTime].State = "ERROR";
+                    RealTime.WriteRealTimeFile(RealTimeData);
                 }
                 else 
                     break;
+                indRTime++;
             }
             if (error == errorCode.SUCCESS)
                 statusView.JobsComplete();
             return error;
         }
-        public errorCode SaveDir(string source, string destination)
+        private void GetDirectoryInfo(FileInfo file, string destination)
+        {
+            totalSaveSize += file.Length;
+            totalNbFile++;
+        }
+        private errorCode SaveDir(string source, string destination)
         {
             var dir = new DirectoryInfo(source);
             if (!dir.Exists)
@@ -150,7 +197,10 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
         private void CopyFile(FileInfo file, string destination)
         {
             file.CopyTo(Path.Combine(destination, file.Name), true);
-            totalSaveSize += file.Length;
+            NbFilesCopied++;
+            RealTimeData[indRTime].NbFilezLeftToDo = NbFilesCopied - RealTimeData[indRTime].TotalFilesToCopy;
+            RealTimeData[indRTime].Progression = NbFilesCopied / RealTimeData[indRTime].TotalFilesToCopy;
+            RealTime.WriteRealTimeFile(RealTimeData);
         }
         private void CopyFileDiff(FileInfo file, string destination)
         {
