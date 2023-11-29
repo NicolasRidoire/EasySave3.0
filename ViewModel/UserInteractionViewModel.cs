@@ -3,6 +3,7 @@ using PROGRAMMATION_SYST_ME.Model;
 using System.IO;
 using System.Text.RegularExpressions;
 using PROGRAMMATION_SYST_ME.View;
+using System.Diagnostics;
 
 namespace PROGRAMMATION_SYST_ME.ViewModel
 {
@@ -13,9 +14,12 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
         public LogModel LogFile { set; get; } = new LogModel();
         private readonly StatusView statusView = new StatusView();
         private long totalSaveSize = 0;
+        private delegate void CopyType(FileInfo file, string destination);
+        CopyType delegCopy;
         public UserInteractionViewModel() 
         {
             BackupJobs = new BackupJobModel(BackupJobsData);
+            delegCopy = CopyFile;
         }
         /// <summary>
         /// Method to update backup jobs
@@ -87,20 +91,32 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
                     statusView.JobStart(BackupJobsData[i].Name);
                     var watch = System.Diagnostics.Stopwatch.StartNew();
                     totalSaveSize = 0;
-                    if (BackupJobsData[jobsToExec[i]].Type == 0) // Full backup
+                    if (BackupJobsData[i].Type == 0) // Full backup
                     {
-                        error = FullCopy(BackupJobsData[jobsToExec[i]].Source, BackupJobsData[jobsToExec[i]].Destination);
+                        delegCopy = CopyFile;
                     }
                     else // Differencial backup
                     {
-                        error = DiferencialCopy(BackupJobsData[jobsToExec[i]].Source, BackupJobsData[jobsToExec[i]].Destination);
+                        delegCopy = CopyFileDiff;
                     }
+                    if (Directory.Exists(BackupJobsData[i].Source))
+                    {
+                        error = SaveDir(BackupJobsData[i].Source, BackupJobsData[i].Destination);
+                    }
+                    else if (File.Exists(BackupJobsData[i].Source))
+                    {
+                        delegCopy(new FileInfo(BackupJobsData[i].Source), BackupJobsData[i].Destination);
+                    }
+                    else
+                        error = errorCode.SOURCE_ERROR;
                     watch.Stop();
+
                     LogFile.WriteLogSave(
-                        BackupJobsData[jobsToExec[i]],
+                        BackupJobsData[i],
                         watch.ElapsedMilliseconds, 
                         totalSaveSize
                     );
+
                     if (error == errorCode.SUCCESS)
                         statusView.JobStop(BackupJobsData[i].Name, watch.ElapsedMilliseconds);
                 }
@@ -111,14 +127,8 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
                 statusView.JobsComplete();
             return error;
         }
-        /// <summary>
-        /// Method to execute a full copy
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="destination"></param>
-        /// <returns></returns>
-        public errorCode FullCopy(string source, string destination)
-        {   
+        public errorCode SaveDir(string source, string destination)
+        {
             var dir = new DirectoryInfo(source);
             if (!dir.Exists)
                 return errorCode.SOURCE_ERROR;
@@ -129,43 +139,27 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
             Directory.CreateDirectory(destination);
             foreach (FileInfo file in dir.GetFiles())
             {
-                file.CopyTo(Path.Combine(destination, file.Name), true);
-                totalSaveSize += file.Length;
+                delegCopy(file, destination);
             }
             foreach (DirectoryInfo subDir in dirs)
             {
-                FullCopy(subDir.FullName, Path.Combine(destination, subDir.Name));
+                SaveDir(subDir.FullName, Path.Combine(destination, subDir.Name));
             }
             return errorCode.SUCCESS;
         }
-        /// <summary>
-        /// Method to execute a differencial copy
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="destination"></param>
-        /// <returns></returns>
-        public errorCode DiferencialCopy(string source, string destination)
+        private void CopyFile(FileInfo file, string destination)
         {
-            var dir = new DirectoryInfo(source);
-            if (!dir.Exists)
-                return errorCode.SOURCE_ERROR;
-            DirectoryInfo[] dirs = dir.GetDirectories();
-            Directory.CreateDirectory(destination);
-            foreach (FileInfo file in dir.GetFiles())
+            file.CopyTo(Path.Combine(destination, file.Name), true);
+            totalSaveSize += file.Length;
+        }
+        private void CopyFileDiff(FileInfo file, string destination)
+        {
+            var destPath = Path.Combine(destination, file.Name);
+            var destFile = new FileInfo(destPath);
+            if (file.LastWriteTime != destFile.LastWriteTime) // Condition to see if file changed
             {
-                var destPath = Path.Combine(destination, file.Name);
-                var destFile = new FileInfo(destPath);
-                if (file.LastWriteTime != destFile.LastWriteTime) // Condition to see if file changed
-                {
-                    file.CopyTo(destPath, true);
-                    totalSaveSize += file.Length;
-                }
+                CopyFile(file, destination);
             }
-            foreach (DirectoryInfo subDir in dirs)
-            {
-                DiferencialCopy(subDir.FullName, Path.Combine(destination, subDir.Name));
-            }
-            return errorCode.SUCCESS;
         }
     }
 }
