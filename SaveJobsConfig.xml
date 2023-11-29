@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <root>
+	<ExtLog>0</ExtLog>
 	<saveJob>
 		<id>0</id>
 		<name>FullBackup1</name>
@@ -10,7 +11,7 @@
 	<saveJob>
 		<id>1</id>
 		<name>FullBackup2</name>
-		<source>C:/Users/nicor/Desktop/Source 2</source>
+		<source>C:/Users/nicor/Desktop/test.txt</source>
 		<destination>C:/Users/nicor/Desktop/Destination 2</destination>
 		<type>0</type>
 	</saveJob>
@@ -24,7 +25,7 @@
 	<saveJob>
 		<id>3</id>
 		<name>DifBackup2</name>
-		<source>C:/Users/nicor/Desktop/Source 2</source>
+		<source>C:/Users/nicor/Desktop/test.txt</source>
 		<destination>C:/Users/nicor/Desktop/Destination 2</destination>
 		<type>1</type>
 	</saveJob>
