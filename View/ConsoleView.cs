@@ -28,7 +28,7 @@ namespace PROGRAMMATION_SYST_ME.View
             {
                 Console.WriteLine(job.Id + 1 + " -> " + job.Name);
             }
-            Console.WriteLine("Choose between U (Update backup jobs) or E (Execute backup jobs) or Q (Quit) : ");
+            Console.WriteLine("Choose between U (Update backup jobs) or E (Execute backup jobs) or Q (Quit) or L (Logs extension): ");
             var choice = Console.ReadLine();
             switch (choice)
             {
@@ -41,6 +41,12 @@ namespace PROGRAMMATION_SYST_ME.View
                 case "Q":
                     error = errorCode.NORMAL_EXIT;
                     break;
+                case "L":
+                    UpdateLogExtension();
+                    while (1 == 1)
+                    { }
+                    break;
+
                 default:
                     error = errorCode.INPUT_ERROR;
                     break;
@@ -119,6 +125,23 @@ namespace PROGRAMMATION_SYST_ME.View
                 UpdateChoice();
             }
         }
+        /// <summary>
+        /// method that allows the user to select the extension of the log file
+        /// </summary>
+        public void UpdateLogExtension()
+        {
+            Console.WriteLine("Select the extension of the log file (xml or json) : ");
+            var extension = Console.ReadLine();
+            if (extension == "xml" || extension == "json")
+            {
+                userInteract.ChangeExtensionLog(extension);
+            }
+            else
+            {
+                error = errorCode.INPUT_ERROR;
+                return;
+            }
+        }   
         /// <summary>
         /// Private method that shows the current backup job's properties
         /// </summary>

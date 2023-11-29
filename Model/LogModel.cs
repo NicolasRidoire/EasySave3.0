@@ -38,11 +38,23 @@ namespace PROGRAMMATION_SYST_ME.Model
         public void createLogFile()
         {
             
-            string extLogValue = Xml.SelectSingleNode("/root/ExtLog").InnerText;
+            string ExtLog = Xml.SelectSingleNode("/root/ExtLog").InnerText;
             logFolder = Path.Combine(Environment.CurrentDirectory, "logs");
             if (!Directory.Exists(logFolder))
                 Directory.CreateDirectory(logFolder);
             logFile = Path.Combine(logFolder, DateTime.Now.Day.ToString() + "_" + DateTime.Now.Month.ToString() + "_" + DateTime.Now.Year.ToString() + "." + ExtLog);
+        }
+
+        public void ChangeExtensionLog(string extLog)
+        {
+            
+            ExtLog = extLog;
+            Console.WriteLine($"Extension of the log file : {ExtLog}");
+            
+            Xml.SelectSingleNode("/root/ExtLog").InnerText = ExtLog;
+            Console.WriteLine($"extension : {Xml.SelectSingleNode("/root/ExtLog").InnerText}");
+            Xml.Save(xmlPath);
+            createLogFile();
         }
         /// <summary>
         /// Method to write our logs' content
