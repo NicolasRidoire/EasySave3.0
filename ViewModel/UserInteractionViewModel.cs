@@ -22,6 +22,7 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
         private int indRTime = 0;
         private delegate void CopyType(FileInfo file, string destination);
         CopyType delegCopy;
+        private string businessSoft = "CalculatorApp";
         public UserInteractionViewModel() 
         {
             BackupJobs = new BackupJobModel(BackupJobsData);
@@ -71,6 +72,13 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
         public errorCode ExecuteJob(string selection) // execute save job
         {
             errorCode error = errorCode.SUCCESS;
+            Process[] processes = Process.GetProcessesByName(businessSoft);
+            if (processes.Length != 0)
+            {
+                error = errorCode.SOFT_LAUNCHED;
+                return error;
+            }
+            
             List<int> jobsToExec = new List<int>();
             if (Regex.IsMatch(selection, @"^[1-4]-[2-5]\z"))
             {
