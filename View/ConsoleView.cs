@@ -91,12 +91,17 @@ namespace PROGRAMMATION_SYST_ME.View
                 error = errorCode.INPUT_ERROR;
                 return;
             }
-            if (change == "Q")
-                return;
-            Console.Write("New value : ");
-            if (change == "T")
-                Console.WriteLine(" (0 for full backup or 1 for differencial backup)");
-            
+            switch (change)
+            {
+                case "Q":
+                    return;
+                case "T":
+                    Console.Write("New value: ");
+                    Console.WriteLine(" (0 for full backup or 1 for differential backup)");
+                    break;
+                
+            }
+
             var newValue = Console.ReadLine();
             if (!IsValidNewValue(newValue, change))
             {
