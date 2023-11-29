@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <root>
+	<ExtLog>0</ExtLog>
 	<saveJob>
 		<id>0</id>
 		<name>FullBackup1</name>
