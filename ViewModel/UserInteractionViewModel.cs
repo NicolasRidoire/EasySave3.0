@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using PROGRAMMATION_SYST_ME.View;
 using System.Diagnostics;
 
+
 namespace PROGRAMMATION_SYST_ME.ViewModel
 {
     class UserInteractionViewModel
@@ -34,6 +35,15 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
         /// <param name="change"></param>
         /// <param name="newValue"></param>
         /// <returns></returns>
+        /// <summary>
+        /// Method to update backup jobs
+        /// </summary>
+        public bool ChangeExtensionLog(string extLog)
+        {
+            LogFile.ChangeExtensionLog(extLog);
+            // print in console the new extension
+            return true;
+        }
         public errorCode UpdateJob(int jobChoice, string change, string newValue) 
         {   // Utilisation d'un switch case
             switch (change)
