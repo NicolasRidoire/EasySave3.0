@@ -3,12 +3,13 @@ using PROGRAMMATION_SYST_ME.ViewModel;
 using System;
 using System.Reflection.Metadata.Ecma335;
 public enum errorCode
-    {
-        SUCCESS = 0,
-        NORMAL_EXIT = 1,
-        INPUT_ERROR = 2,
-        SOURCE_ERROR = 3
-    };
+{
+    SUCCESS = 0,
+    NORMAL_EXIT = 1,
+    INPUT_ERROR = 2,
+    SOURCE_ERROR = 3,
+    SOFT_LAUNCHED = 4
+};
 namespace PROGRAMMATION_SYST_ME.View
 {
     /// <summary>
@@ -168,6 +169,7 @@ namespace PROGRAMMATION_SYST_ME.View
                     break;
                 case errorCode.INPUT_ERROR: FormatError("Invalid input"); break;
                 case errorCode.SOURCE_ERROR: FormatError("Source directory not found"); break;
+                case errorCode.SOFT_LAUNCHED: FormatError("Business software is started. Please close it"); break;
             }
         }
         /// <summary>
