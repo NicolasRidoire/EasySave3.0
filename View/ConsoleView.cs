@@ -43,8 +43,6 @@ namespace PROGRAMMATION_SYST_ME.View
                     break;
                 case "L":
                     UpdateLogExtension();
-                    while (1 == 1)
-                    { }
                     break;
 
                 default:
@@ -135,13 +133,16 @@ namespace PROGRAMMATION_SYST_ME.View
             if (extension == "xml" || extension == "json")
             {
                 userInteract.ChangeExtensionLog(extension);
+                Console.WriteLine("Extension changed to : " + extension);
             }
             else
             {
                 error = errorCode.INPUT_ERROR;
                 return;
             }
-        }   
+            Console.WriteLine("press any key to continue");
+            Console.ReadKey();
+        }
         /// <summary>
         /// Private method that shows the current backup job's properties
         /// </summary>

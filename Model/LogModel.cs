@@ -49,10 +49,7 @@ namespace PROGRAMMATION_SYST_ME.Model
         {
             
             ExtLog = extLog;
-            Console.WriteLine($"Extension of the log file : {ExtLog}");
-            
             Xml.SelectSingleNode("/root/ExtLog").InnerText = ExtLog;
-            Console.WriteLine($"extension : {Xml.SelectSingleNode("/root/ExtLog").InnerText}");
             Xml.Save(xmlPath);
             createLogFile();
         }
