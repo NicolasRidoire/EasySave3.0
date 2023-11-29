@@ -25,7 +25,7 @@ namespace PROGRAMMATION_SYST_ME.Model
                 Console.WriteLine($"Error : {e}");
                 Environment.Exit(3);
             }
-            foreach (XmlNode node in Xml.DocumentElement)
+            foreach (XmlNode node in Xml.DocumentElement.SelectNodes("//saveJob"))
             {
                 BackupJobDataModel data = new BackupJobDataModel();
                 data.Id = int.Parse(node.ChildNodes[0].InnerText);

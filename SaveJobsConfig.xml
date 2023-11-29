@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <root>
+	<ExtLog>xml</ExtLog>
 	<saveJob>
 		<id>0</id>
 		<name>FullBackup1</name>
@@ -35,4 +36,5 @@
 		<destination>C:/default5/destination/</destination>
 		<type>0</type>
 	</saveJob>
+	
 </root>
