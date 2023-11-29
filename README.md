@@ -23,16 +23,15 @@ Exécution de sauvegardes :
 
 ## Gestion d'erreur
 Success Exit: `errorCode.SUCCESS`
-
 Successful exit from the program.
+
 Normal Exit: `errorCode.NORMAL_EXIT`
-
 Normal exit from the program.
+
 Input Error: `errorCode.INPUT_ERROR`
-
 Invalid user input.
-Source Error: `errorCode.SOURCE_ERROR`
 
+Source Error: `errorCode.SOURCE_ERROR`
 Source directory not found.
 
 ## Fonctionnalités
