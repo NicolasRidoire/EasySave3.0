@@ -35,7 +35,6 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
             RealTime.CreateRealTimeFile();
             return true;
         }
-        
         public int CreateJob(string name, string source, string Destination, int type)
         {
             BackupJobDataModel newJob = new BackupJobDataModel

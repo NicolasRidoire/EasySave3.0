@@ -172,43 +172,49 @@ namespace PROGRAMMATION_SYST_ME.View
                 error = errorCode.INPUT_ERROR;
                 return;
             }
+            ChangeValue(jobChoice);
+        }
+        private void ChangeValue(int jobChoice)
+        {
             Console.WriteLine("Select what you want to change : ");
             ShowParam(jobChoice);
             Console.WriteLine("Q -> Quit");
             var change = Console.ReadLine();
-
+            if (change == "Q") 
+            {
+                return;
+            }
             // Utilisation d'une méthode pour la lisibilité de la condition
             if (!IsValidInputChange(change))
             {
                 error = errorCode.INPUT_ERROR;
                 return;
             }
+
+            Console.Write("New value : ");
             switch (change)
             {
                 case "Q":
                     return;
                 case "T":
-                    Console.Write("New value: ");
-                    Console.WriteLine(" (0 for full backup or 1 for differential backup)");
+                    Console.WriteLine("(0 for full backup or 1 for differential backup)");
                     break;
-                
             }
 
             var newValue = Console.ReadLine();
-            if (!IsValidNewValue(newValue, change))
+            if (IsValidNewValue(newValue, change))
             {
                 error = errorCode.INPUT_ERROR;
                 return;
             }
-            
+
             error = userInteract.UpdateJob(jobChoice, change, newValue);
             ShowParam(jobChoice);
             Console.WriteLine("Confirm : (M to Modify or anything else to confirm)");
             if (Console.ReadLine() == "M")
             {
                 Console.Clear();
-                ShowParam(jobChoice);
-                UpdateChoice();
+                ChangeValue(jobChoice);
             }
         }
         
@@ -274,7 +280,7 @@ namespace PROGRAMMATION_SYST_ME.View
         /// </summary>
         /// <param name="change">user input</param>
         /// <returns>true if Input is valid, false if not</returns>
-        private bool IsValidInputChange(string change) => (change == "N" || change == "S" || change == "D" || change == "T" || change == "Q");
+        private bool IsValidInputChange(string change) => (change == "N" || change == "S" || change == "D" || change == "T");
         /// <summary>
         /// Unreadable verification for user newValue input
         /// </summary>
