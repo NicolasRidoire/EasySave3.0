@@ -43,7 +43,11 @@ namespace PROGRAMMATION_SYST_ME.Model
                 jobList.Add(data);
             }
         }
-
+        public void DestroyNode(int index)
+        {
+            var nodeToDestroy = Xml.DocumentElement;
+            nodeToDestroy.RemoveChild(nodeToDestroy.SelectNodes("//saveJob")[index]);
+        }
         public void UpdateNode(List<BackupJobDataModel> jobList, XmlNode node, int id)
         {
             node.ChildNodes[0].InnerText = id.ToString();
