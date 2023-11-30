@@ -49,12 +49,12 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
             BackupJobs.CreateJob(BackupJobsData);
             return newJob.Id;
         }
-        public errorCode DeleteJob(int jobChoice)
+        public errorCode DeleteJobVM(int job)
         {
-            BackupJobsData.RemoveAt(jobChoice);
-            BackupJobs.DeleteJob(jobChoice);
+            BackupJobsData.RemoveAt(job);
+            BackupJobs.DestroyNode(job);
             BackupJobs.SaveParam(BackupJobsData);
-            BackupJobs.UpdateList(BackupJobsData);
+            BackupJobs.UpdateJobList(BackupJobsData);
             return errorCode.SUCCESS;
         }
         public errorCode UpdateJob(int jobChoice, string change, string newValue) 
