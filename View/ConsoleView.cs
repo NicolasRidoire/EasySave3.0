@@ -58,7 +58,7 @@ namespace PROGRAMMATION_SYST_ME.View
         /// <summary>
         /// Method that asks the user for the backup job(s) to execute, then executes the selected backup job(s)
         /// </summary>
-        public void ExecuteChoice() 
+        private void ExecuteChoice() 
         {
             Console.WriteLine("Select the backup jobs to execute (example : 1-3 or 1;3) or Q to Quit : ");
             var selection = Console.ReadLine();
@@ -67,7 +67,7 @@ namespace PROGRAMMATION_SYST_ME.View
         /// <summary>
         /// Method that asks the user if he wants 
         /// </summary>
-        public void UpdateChoice()
+        private void UpdateChoice()
         {
             Console.WriteLine("Choose between : \n" +
                 "C -> Create a backup job\n" +
@@ -83,7 +83,7 @@ namespace PROGRAMMATION_SYST_ME.View
                     ModifyJob();
                     break;
                 case "D":
-
+                    DeleteJob();
                     break;
                 case "Q":
                     break;
@@ -95,14 +95,42 @@ namespace PROGRAMMATION_SYST_ME.View
         /// <summary>
         /// Create a new backup job
         /// </summary>
-        public void CreateJob()
+        private void CreateJob()
         {
-            Console.WriteLine("");
+            Console.WriteLine("Enter a name :");
+            var name = Console.ReadLine();
+            Console.WriteLine("Enter a source directory or file :");
+            var source = Console.ReadLine();
+            Console.WriteLine("Enter a destination directory :");
+            var destination = Console.ReadLine();
+            Console.WriteLine("Enter a backup type (O for complete backup or 1 for diferencial backup");
+            int type;
+            try // Convertion from string to int is risky
+            {
+                type = int.Parse(Console.ReadLine());
+            }
+            catch (System.FormatException)
+            {
+                error = errorCode.INPUT_ERROR;
+                return;
+            }
+            if (!(type >= 0 && type <= 1))
+            {
+                error = errorCode.INPUT_ERROR;
+                return;
+            }
+            Console.WriteLine($"N -> Name : {name}");
+            Console.WriteLine($"S -> Source path : {source}");
+            Console.WriteLine($"D -> Destination path : {destination}");
+            Console.WriteLine("T -> Type : {0}", type == 0 ? "Full backup" : "Differential backup");
+            Console.WriteLine("Enter C to confirm or anything else to cancel");
+            if (Console.ReadLine() == "C")
+                userInteract.CreateJobVM(name, source, destination, type);
         }
         /// <summary>
         /// Modify a pre-existring backup job
         /// </summary>
-        public void ModifyJob() 
+        private void ModifyJob() 
         {
             Console.WriteLine("Select the backup job to modify (Between 1 to 5) : ");
             int jobChoice;
@@ -114,7 +142,7 @@ namespace PROGRAMMATION_SYST_ME.View
                 error = errorCode.INPUT_ERROR;
                 return;
             }
-            if (!(jobChoice >= 0 && jobChoice < 5))
+            if (!(jobChoice >= 0 && jobChoice < userInteract.BackupJobsData.Count))
             {
                 error = errorCode.INPUT_ERROR;
                 return;
@@ -158,10 +186,33 @@ namespace PROGRAMMATION_SYST_ME.View
                 UpdateChoice();
             }
         }
+        private void DeleteJob()
+        {
+            Console.WriteLine("Select the backup job to delete (Between 1 to 5) :");
+            int jobChoice;
+            try // Convertion from string to int is risky
+            {
+                jobChoice = int.Parse(Console.ReadLine()) - 1;
+            }
+            catch (System.FormatException)
+            {
+                error = errorCode.INPUT_ERROR;
+                return;
+            }
+            if (!(jobChoice >= 0 && jobChoice < userInteract.BackupJobsData.Count))
+            {
+                error = errorCode.INPUT_ERROR;
+                return;
+            }
+            ShowParam(jobChoice);
+            Console.WriteLine("Enter C to Confirm deletion of this backup job or anything else to cancel");
+            if (Console.ReadLine() == "C")
+                userInteract.DeleteJobVM(jobChoice);
+        }
         /// <summary>
         /// method that allows the user to select the extension of the log file
         /// </summary>
-        public void UpdateLogExtension()
+        private void UpdateLogExtension()
         {
             Console.WriteLine("Select the extension of the log file (xml or json) : ");
             var extension = Console.ReadLine();
