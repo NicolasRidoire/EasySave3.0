@@ -75,7 +75,7 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
             Process[] processes = Process.GetProcessesByName(businessSoft);
             if (processes.Length != 0)
             {
-                error = errorCode.SOFT_LAUNCHED;
+                error = errorCode.BUSINESS_SOFT_LAUNCHED;
                 return error;
             }
             
