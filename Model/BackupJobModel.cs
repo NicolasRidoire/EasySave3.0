@@ -54,6 +54,15 @@ namespace PROGRAMMATION_SYST_ME.Model
             }
             Xml.Save(xmlPath);
         }
+        /// <summary>
+        /// Change the extension file
+        /// </summary>
+        /// <param name="extLog">extension name</param>
+        public void ChangeExtensionLog(string extLog)
+        {
+            Xml.SelectSingleNode("/root/ExtLog").InnerText = extLog;
+            Xml.Save(xmlPath);
+        }
     }
     class BackupJobDataModel
     {
