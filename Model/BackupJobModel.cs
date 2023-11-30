@@ -99,11 +99,6 @@ namespace PROGRAMMATION_SYST_ME.Model
             UpdateNode(jobList, saveJob, jobList.Count-1);
         }
 
-        public void DeleteJob(int jobChoice)
-        {
-            XmlNode elem = Xml.DocumentElement.SelectSingleNode("saveJob[id=" + jobChoice.ToString() + "]");
-            Xml.DocumentElement.RemoveChild(elem);
-        }
     }
     class BackupJobDataModel
     {
