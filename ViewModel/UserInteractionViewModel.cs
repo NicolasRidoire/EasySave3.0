@@ -44,6 +44,23 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
             // print in console the new extension
             return true;
         }
+        public void CreateJobVM(string name, string source, string destination, int type)
+        {
+            BackupJobsData.Add(new BackupJobDataModel());
+            BackupJobsData[BackupJobsData.Count - 1].Id = BackupJobsData.Count - 1;
+            BackupJobsData[BackupJobsData.Count - 1].Name = name;
+            BackupJobsData[BackupJobsData.Count - 1].Source = source;
+            BackupJobsData[BackupJobsData.Count - 1].Destination = destination;
+            BackupJobsData[BackupJobsData.Count - 1].Type = type;
+            BackupJobs.SaveParam(BackupJobsData);
+        }
+        public void DeleteJobVM(int job) 
+        {
+            BackupJobsData.RemoveAt(job);
+            BackupJobs.DestroyNode(job);
+            BackupJobs.SaveParam(BackupJobsData);
+            BackupJobs.UpdateJobId(BackupJobsData);
+        }
         public errorCode UpdateJob(int jobChoice, string change, string newValue) 
         {   // Utilisation d'un switch case
             switch (change)
