@@ -35,13 +35,6 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
             RealTime.CreateRealTimeFile();
             return true;
         }
-        
-        public bool ChangeExtensionLog(string extLog)
-        {
-            LogFile.ChangeExtensionLog(extLog);
-            // print in console the new extension
-            return true;
-        }
         public void CreateJobVM(string name, string source, string destination, int type)
         {
             BackupJobsData.Add(new BackupJobDataModel());
