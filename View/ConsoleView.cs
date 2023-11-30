@@ -115,6 +115,11 @@ namespace PROGRAMMATION_SYST_ME.View
                 error = errorCode.INPUT_ERROR;
                 return;
             }
+            if (!(jobChoice >= 0 && jobChoice <= 1))
+            {
+                error = errorCode.INPUT_ERROR;
+                return;
+            }
             int id = userInteract.CreateJob(name, source, dest, type);
             ShowParam(id);
             Console.WriteLine("Confirm : (M to Modify or anything else to confirm)");
