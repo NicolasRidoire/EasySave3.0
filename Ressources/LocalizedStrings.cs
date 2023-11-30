@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace EasySaveV2._0
+namespace PROGRAMMATION_SYST_ME.Ressources
 {
     public static class LocalizedStrings
     {
@@ -17,5 +17,9 @@ namespace EasySaveV2._0
         public static string Update => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "update");
         public static string Execut => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "Execut");
         public static string Description => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "description");
+        public static string ComplSave => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "ComplSave");
+        public static string DifSave => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "DifSave");
+
+
     }
 }

@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-
-
 using System;
 using System.Globalization;  // Assurez-vous que cette ligne est présente
 using System.Threading;
@@ -11,7 +9,7 @@ public static class LanguageManager
 {
     private static Dictionary<string, Dictionary<string, string>> languages = new Dictionary<string, Dictionary<string, string>>();
 
-    static LanguageManager( )
+    static LanguageManager()
     {
         languages["en-US"] = new Dictionary<string, string>
         {
@@ -22,8 +20,9 @@ public static class LanguageManager
             { "create" ,"Create" },
             { "update" ,"Update" },
             { "Execut" ,"Execute" },
-            { "Delete" ,"Delete" }
-
+            { "Delete" ,"Delete" },
+            { "ComplSave", "Complete" },
+            { "DifSave", "Diferencial" }
 
         };
 
@@ -36,19 +35,21 @@ public static class LanguageManager
             { "create" ,"Créer" },
             { "update" ,"Modifier"},
             { "Execut" ,"Executer"},
-            { "Delete" ,"Supprimer" }
+            { "Delete" ,"Supprimer" },
+            { "ComplSave","Complète" },
+            { "DifSave","Différentielle" }
         };
     }
 
     public static string GetLocalizedString(string language, string key)
     {
-        
+
         if (languages.ContainsKey(language) && languages[language].ContainsKey(key))
         {
             return languages[language][key];
         }
 
-        
+
         return "";
     }
 }

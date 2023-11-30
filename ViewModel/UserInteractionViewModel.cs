@@ -2,7 +2,7 @@
 using PROGRAMMATION_SYST_ME.Model;
 using System.IO;
 using System.Text.RegularExpressions;
-using PROGRAMMATION_SYST_ME.View;
+using PROGRAMMATION_SYST_ME;
 using System.Diagnostics;
 
 
@@ -15,7 +15,7 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
         public List<RealTimeDataModel> RealTimeData { set; get; } = new List<RealTimeDataModel>();
         public RealTimeModel RealTime { set; get; } = new RealTimeModel();
         public LogModel LogFile { set; get; } = new LogModel();
-        private readonly StatusView statusView = new StatusView();
+        //private readonly StatusView statusView = new StatusView();
         private long totalSaveSize = 0;
         private long totalNbFile = 0;
         private long NbFilesCopied = 0;
@@ -23,7 +23,7 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
         private delegate void CopyType(FileInfo file, string destination);
         CopyType delegCopy;
         private string businessSoft = "CalculatorApp";
-        public UserInteractionViewModel() 
+        public UserInteractionViewModel()
         {
             BackupJobs = new BackupJobModel(BackupJobsData);
             delegCopy = CopyFile;
@@ -57,7 +57,7 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
             BackupJobs.UpdateList(BackupJobsData);
             return errorCode.SUCCESS;
         }
-        public errorCode UpdateJob(int jobChoice, string change, string newValue) 
+        public errorCode UpdateJob(int jobChoice, string change, string newValue)
         {   // Utilisation d'un switch case
             switch (change)
             {
@@ -82,7 +82,7 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
         /// </summary>
         /// <param name="selection">input user</param>
         /// <returns>error code BUSINESS_SOFT_LAUNCHED or INPUT_USER or SOURCE_ERROR or SUCCESS</returns>
-        public errorCode ExecuteJob(string selection) 
+        public errorCode ExecuteJob(List<int> jobsToExec)
         {
             errorCode error = errorCode.SUCCESS;
             Process[] processes = Process.GetProcessesByName(businessSoft);
@@ -91,38 +91,10 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
                 error = errorCode.BUSINESS_SOFT_LAUNCHED;
                 return error;
             }
-            
-            List<int> jobsToExec = new List<int>();
-            if (Regex.IsMatch(selection, @"^[1-4]-[2-5]\z"))
-            {
-                var start = selection[0];
-                var end = selection[2];
-                for (var i = start; i < end + 1; i++)
-                {
-                    jobsToExec.Add(i - '0' - 1);
-                }
-            }
-            else if (Regex.IsMatch(selection, @"^[1-5](;[1-5]){0,3};[1-5]\z"))
-            {
-                foreach (char c in selection)
-                {
-                    if (c != ';')
-                        jobsToExec.Add(c - '0' - 1);
-                }
-            }
-            else if (Regex.IsMatch(selection, @"^[1-5]\z"))
-            {
-                jobsToExec.Add(int.Parse(selection) - 1);
-            }
-            else if (selection == "Q")
-                return errorCode.SUCCESS;
-            else
-            {
-                return errorCode.INPUT_ERROR;
-            }
+
             SetupRealTime(jobsToExec);
             indRTime = 0;
-            foreach (int i in jobsToExec) 
+            foreach (int i in jobsToExec)
             {
                 NbFilesCopied = 0;
                 if (error == errorCode.SUCCESS)
@@ -130,7 +102,7 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
                     RealTimeData[indRTime].State = "ACTIVE";
                     RealTime.WriteRealTimeFile(RealTimeData);
 
-                    statusView.JobStart(BackupJobsData[i].Name);
+                    //statusView.JobStart(BackupJobsData[i].Name);
                     var watch = System.Diagnostics.Stopwatch.StartNew();
                     totalSaveSize = 0;
                     if (BackupJobsData[i].Type == 0) // Full backup
@@ -155,25 +127,25 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
 
                     LogFile.WriteLogSave(
                         BackupJobsData[i],
-                        watch.ElapsedMilliseconds, 
+                        watch.ElapsedMilliseconds,
                         totalSaveSize
                     );
 
                     if (error == errorCode.SUCCESS)
                     {
-                        statusView.JobStop(BackupJobsData[i].Name, watch.ElapsedMilliseconds);
+                        //statusView.JobStop(BackupJobsData[i].Name, watch.ElapsedMilliseconds);
                         RealTimeData[indRTime].State = "SUCCESSFUL";
                     }
                     else
                         RealTimeData[indRTime].State = "ERROR";
                     RealTime.WriteRealTimeFile(RealTimeData);
                 }
-                else 
+                else
                     break;
                 indRTime++;
             }
-            if (error == errorCode.SUCCESS)
-                statusView.JobsComplete();
+            if (error == errorCode.SUCCESS) { }
+            //statusView.JobsComplete();
             return error;
         }
         /// <summary>
