@@ -3,11 +3,11 @@ using PROGRAMMATION_SYST_ME.ViewModel;
 using System;
 public enum errorCode
 {
-    SUCCESS = 0,
-    NORMAL_EXIT = 1,
-    INPUT_ERROR = 2,
-    SOURCE_ERROR = 3,
-    BUSINESS_SOFT_LAUNCHED = 4
+    SUCCESS = 0, // Allow code to continue
+    NORMAL_EXIT = 1, // Normal exit code
+    INPUT_ERROR = 2, // User entered wrong input
+    SOURCE_ERROR = 3, // Source File/Folder is inaccessible to the user
+    BUSINESS_SOFT_LAUNCHED = 4 // Error if business software is launched while user starts backups
 };
 namespace PROGRAMMATION_SYST_ME.View
 {
@@ -65,7 +65,7 @@ namespace PROGRAMMATION_SYST_ME.View
             error = userInteract.ExecuteJob(selection);
         }
         /// <summary>
-        /// Method that allows the user to select which backup job he'd like to modify
+        /// Method that asks the user if he wants 
         /// </summary>
         private void UpdateChoice()
         {
@@ -92,6 +92,9 @@ namespace PROGRAMMATION_SYST_ME.View
                     break;
             }
         }
+        /// <summary>
+        /// Create a new backup job
+        /// </summary>
         private void CreateJob()
         {
             Console.WriteLine("Enter a name :");
@@ -124,6 +127,9 @@ namespace PROGRAMMATION_SYST_ME.View
             if (Console.ReadLine() == "C")
                 userInteract.CreateJobVM(name, source, destination, type);
         }
+        /// <summary>
+        /// Modify a pre-existring backup job
+        /// </summary>
         private void ModifyJob() 
         {
             Console.WriteLine("Select the backup job to modify (Between 1 to 5) : ");
@@ -224,9 +230,9 @@ namespace PROGRAMMATION_SYST_ME.View
             Console.ReadKey();
         }
         /// <summary>
-        /// Private method that shows the current backup job's properties
+        /// Method that shows the current backup job's properties
         /// </summary>
-        /// <param name="jobChoice"></param>
+        /// <param name="jobChoice">Index of the backup job list</param>
         private void ShowParam(int jobChoice)
         {
             Console.WriteLine($"N -> Name : {userInteract.BackupJobsData[jobChoice].Name}");
@@ -260,7 +266,17 @@ namespace PROGRAMMATION_SYST_ME.View
             Console.WriteLine($"Error {error} : {msg}");
             Console.ReadKey();
         }
+        /// <summary>
+        /// Unreadable verification for user updateChoice input
+        /// </summary>
+        /// <param name="change">user input</param>
+        /// <returns>true if Input is valid, false if not</returns>
         private bool IsValidInputChange(string change) => (change == "N" || change == "S" || change == "D" || change == "T" || change == "Q");
+        /// <summary>
+        /// Unreadable verification for user newValue input
+        /// </summary>
+        /// <param name="change">user input</param>
+        /// <returns>true if Input is valid, false if not</returns>
         private bool IsValidNewValue(string newValue, string change) => newValue == "" || (change == "T" && !(newValue == "0" || newValue == "1"));
     }
 }

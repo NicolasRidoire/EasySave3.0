@@ -28,16 +28,14 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
             BackupJobs = new BackupJobModel(BackupJobsData);
             delegCopy = CopyFile;
         }
-        /// <summary>
-        /// Method to update backup jobs
-        /// </summary>
-        /// <param name="jobChoice"></param>
-        /// <param name="change"></param>
-        /// <param name="newValue"></param>
-        /// <returns></returns>
-        /// <summary>
-        /// Method to update backup jobs
-        /// </summary>
+        public bool ChangeExtensionLog(string extLog)
+        {
+            BackupJobs.ChangeExtensionLog(extLog);
+            LogFile.CreateLogFile();
+            RealTime.CreateRealTimeFile();
+            return true;
+        }
+        
         public bool ChangeExtensionLog(string extLog)
         {
             LogFile.ChangeExtensionLog(extLog);
@@ -61,6 +59,13 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
             BackupJobs.SaveParam(BackupJobsData);
             BackupJobs.UpdateJobId(BackupJobsData);
         }
+        /// <summary>
+        /// Method to update backup jobs
+        /// </summary>
+        /// <param name="jobChoice"></param>
+        /// <param name="change"></param>
+        /// <param name="newValue"></param>
+        /// <returns></returns>
         public errorCode UpdateJob(int jobChoice, string change, string newValue) 
         {   // Utilisation d'un switch case
             switch (change)
@@ -84,9 +89,9 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
         /// <summary>
         /// Method to execute backup jobs
         /// </summary>
-        /// <param name="selection"></param>
-        /// <returns></returns>
-        public errorCode ExecuteJob(string selection) // execute save job
+        /// <param name="selection">input user</param>
+        /// <returns>error code BUSINESS_SOFT_LAUNCHED or INPUT_USER or SOURCE_ERROR or SUCCESS</returns>
+        public errorCode ExecuteJob(string selection) 
         {
             errorCode error = errorCode.SUCCESS;
             Process[] processes = Process.GetProcessesByName(businessSoft);
@@ -180,11 +185,23 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
                 statusView.JobsComplete();
             return error;
         }
-        private void GetDirectoryInfo(FileInfo file, string destination)
+        /// <summary>
+        /// Get the file size and length
+        /// </summary>
+        /// <param name="file">a file</param>
+        /// <param name="destination">null by default (only here for delegate)</param>
+        private void GetDirectoryInfo(FileInfo file, string destination = null)
         {
             totalSaveSize += file.Length;
             totalNbFile++;
         }
+        /// <summary>
+        /// Go through a directory recursively and use a delegate 
+        /// to choose what to do on each file
+        /// </summary>
+        /// <param name="source">Source directory</param>
+        /// <param name="destination">Destination directory</param>
+        /// <returns>error code SUCCESS or SOURCE_ERROR</returns>
         private errorCode SaveDir(string source, string destination)
         {
             var dir = new DirectoryInfo(source);
@@ -205,14 +222,24 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
             }
             return errorCode.SUCCESS;
         }
+        /// <summary>
+        /// Copy a file while updating total copy info
+        /// </summary>
+        /// <param name="file">a file</param>
+        /// <param name="destination">destination directory</param>
         private void CopyFile(FileInfo file, string destination)
         {
             file.CopyTo(Path.Combine(destination, file.Name), true);
             NbFilesCopied++;
-            RealTimeData[indRTime].NbFilezLeftToDo = NbFilesCopied - RealTimeData[indRTime].TotalFilesToCopy;
+            RealTimeData[indRTime].NbFilesLeftToDo = NbFilesCopied - RealTimeData[indRTime].TotalFilesToCopy;
             RealTimeData[indRTime].Progression = NbFilesCopied / RealTimeData[indRTime].TotalFilesToCopy;
             RealTime.WriteRealTimeFile(RealTimeData);
         }
+        /// <summary>
+        /// Copy a file if a change occured while updating total copy info
+        /// </summary>
+        /// <param name="file">a file</param>
+        /// <param name="destination">destination directory</param>
         private void CopyFileDiff(FileInfo file, string destination)
         {
             var destPath = Path.Combine(destination, file.Name);
@@ -222,8 +249,14 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
                 CopyFile(file, destination);
             }
         }
+        /// <summary>
+        /// Setup the real time log file
+        /// </summary>
+        /// <param name="jobsToExec">List of index that represent the backup jobs</param>
         private void SetupRealTime(List<int> jobsToExec)
         {
+            RealTimeData.Clear();
+            indRTime = 0;
             foreach (int i in jobsToExec)
             {
                 RealTimeData.Add(new RealTimeDataModel());
