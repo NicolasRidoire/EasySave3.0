@@ -28,11 +28,11 @@ namespace PROGRAMMATION_SYST_ME.View
             {
                 Console.WriteLine(job.Id + 1 + " -> " + job.Name);
             }
-            Console.WriteLine("Choose between U (Update backup jobs) or E (Execute backup jobs) or Q (Quit) or L (Logs extension): ");
+            Console.WriteLine("Choose between C (Change backup jobs) or E (Execute backup jobs) or L (Logs extension) or Q (Quit): ");
             var choice = Console.ReadLine();
             switch (choice)
             {
-                case "U":
+                case "C":
                     UpdateChoice();
                     break;
                 case "E":
