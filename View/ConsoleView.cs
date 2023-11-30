@@ -115,19 +115,19 @@ namespace PROGRAMMATION_SYST_ME.View
                 error = errorCode.INPUT_ERROR;
                 return;
             }
-            if (!(jobChoice >= 0 && jobChoice <= 1))
+            if (!(type >= 0 && type <= 1))
             {
                 error = errorCode.INPUT_ERROR;
                 return;
             }
-            int id = userInteract.CreateJob(name, source, dest, type);
-            ShowParam(id);
-            Console.WriteLine("Confirm : (M to Modify or anything else to confirm)");
-            if (Console.ReadLine() == "M")
+            Console.WriteLine($"N -> Name : {name}");
+            Console.WriteLine($"S -> Source path : {source}");
+            Console.WriteLine($"D -> Destination path : {dest}");
+            Console.WriteLine("T -> Type : {0}", type == 0 ? "Full backup" : "Differential backup");
+            Console.WriteLine("Confirm : (C to Confirm or anything else to cancel)");
+            if (Console.ReadLine() == "C")
             {
-                Console.Clear();
-                ShowParam(id);
-                UpdateChoice();
+                int id = userInteract.CreateJob(name, source, dest, type);
             }
         }
 
@@ -146,16 +146,10 @@ namespace PROGRAMMATION_SYST_ME.View
             }
             Console.WriteLine("Confirm that you want to delete this backup job :");
             ShowParam(jobChoice);
-            Console.WriteLine("\nEnter C to Confirm");
+            Console.WriteLine("Enter C to Confirm or anything else to cancel");
             var change = Console.ReadLine();
-            switch (change)
-            {
-                case "C":
-                    error = userInteract.DeleteJob(jobChoice);
-                    break;
-                default:
-                    return;
-            }
+            if (change == "C")
+                    error = userInteract.DeleteJobVM(jobChoice);
         }
         /// <summary>
         /// Modify a pre-existring backup job

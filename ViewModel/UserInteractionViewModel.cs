@@ -54,7 +54,7 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
             BackupJobsData.RemoveAt(job);
             BackupJobs.DestroyNode(job);
             BackupJobs.SaveParam(BackupJobsData);
-            BackupJobs.UpdateJobList(BackupJobsData);
+            BackupJobs.UpdateList(BackupJobsData);
             return errorCode.SUCCESS;
         }
         public errorCode UpdateJob(int jobChoice, string change, string newValue) 
