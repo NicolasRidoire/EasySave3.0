@@ -36,36 +36,28 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
             return true;
         }
         
-        public bool ChangeExtensionLog(string extLog)
+        public int CreateJob(string name, string source, string Destination, int type)
         {
-            LogFile.ChangeExtensionLog(extLog);
-            // print in console the new extension
-            return true;
+            BackupJobDataModel newJob = new BackupJobDataModel
+            {
+                Id = BackupJobsData.Count,
+                Name = name,
+                Source = source,
+                Destination = Destination,
+                Type = type
+            };
+            BackupJobsData.Add(newJob);
+            BackupJobs.CreateJob(BackupJobsData);
+            return newJob.Id;
         }
-        public void CreateJobVM(string name, string source, string destination, int type)
+        public errorCode DeleteJob(int jobChoice)
         {
-            BackupJobsData.Add(new BackupJobDataModel());
-            BackupJobsData[BackupJobsData.Count - 1].Id = BackupJobsData.Count - 1;
-            BackupJobsData[BackupJobsData.Count - 1].Name = name;
-            BackupJobsData[BackupJobsData.Count - 1].Source = source;
-            BackupJobsData[BackupJobsData.Count - 1].Destination = destination;
-            BackupJobsData[BackupJobsData.Count - 1].Type = type;
+            BackupJobsData.RemoveAt(jobChoice);
+            BackupJobs.DeleteJob(jobChoice);
             BackupJobs.SaveParam(BackupJobsData);
+            BackupJobs.UpdateList(BackupJobsData);
+            return errorCode.SUCCESS;
         }
-        public void DeleteJobVM(int job) 
-        {
-            BackupJobsData.RemoveAt(job);
-            BackupJobs.DestroyNode(job);
-            BackupJobs.SaveParam(BackupJobsData);
-            BackupJobs.UpdateJobId(BackupJobsData);
-        }
-        /// <summary>
-        /// Method to update backup jobs
-        /// </summary>
-        /// <param name="jobChoice"></param>
-        /// <param name="change"></param>
-        /// <param name="newValue"></param>
-        /// <returns></returns>
         public errorCode UpdateJob(int jobChoice, string change, string newValue) 
         {   // Utilisation d'un switch case
             switch (change)
