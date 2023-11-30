@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace PROGRAMMATION_SYST_ME.Model
 {
@@ -25,9 +26,10 @@ namespace PROGRAMMATION_SYST_ME.Model
                 Console.WriteLine($"Error : {e}");
                 Environment.Exit(3);
             }
-            UpdateJobId(jobList);
+            UpdateList(jobList);
         }
-        public void UpdateJobId(List<BackupJobDataModel> jobList)
+        
+        public void UpdateList(List<BackupJobDataModel> jobList)
         {
             jobList.Clear();
             foreach (XmlNode node in Xml.DocumentElement.SelectNodes("//saveJob"))
@@ -41,6 +43,21 @@ namespace PROGRAMMATION_SYST_ME.Model
                 jobList.Add(data);
             }
         }
+        public void DestroyNode(int index)
+        {
+            var nodeToDestroy = Xml.DocumentElement;
+            nodeToDestroy.RemoveChild(nodeToDestroy.SelectNodes("//saveJob")[index]);
+        }
+        public void UpdateNode(List<BackupJobDataModel> jobList, XmlNode node, int id)
+        {
+            node.ChildNodes[0].InnerText = id.ToString();
+            node.ChildNodes[1].InnerText = jobList[id].Name;
+            node.ChildNodes[2].InnerText = jobList[id].Source;
+            node.ChildNodes[3].InnerText = jobList[id].Destination;
+            node.ChildNodes[4].InnerText = jobList[id].Type.ToString();
+            Xml.Save(xmlPath);
+        }
+
         /// <summary>
         /// Method that allows for edits in the backup jobs
         /// </summary>
@@ -60,14 +77,8 @@ namespace PROGRAMMATION_SYST_ME.Model
                     node.AppendChild(Xml.CreateElement("//destination"));
                     node.AppendChild(Xml.CreateElement("//type"));
                 }
-                node.ChildNodes[0].InnerText = i.ToString();
-                node.ChildNodes[1].InnerText = job.Name;
-                node.ChildNodes[2].InnerText = job.Source;
-                node.ChildNodes[3].InnerText = job.Destination;
-                node.ChildNodes[4].InnerText = job.Type.ToString();
-                i++;
+                UpdateNode(jobList, node, i++);
             }
-            Xml.Save(xmlPath);
         }
 
         /// <summary>
@@ -79,11 +90,19 @@ namespace PROGRAMMATION_SYST_ME.Model
             Xml.SelectSingleNode("/root/ExtLog").InnerText = extLog;
             Xml.Save(xmlPath);
         }
-        public void DestroyNode(int index)
+
+        public void CreateJob(List<BackupJobDataModel> jobList)
         {
-            var nodeToDestroy = Xml.DocumentElement;
-            nodeToDestroy.RemoveChild(nodeToDestroy.SelectNodes("//saveJob")[index]);
+            Xml.DocumentElement.AppendChild(Xml.CreateElement("saveJob"));
+            XmlNode saveJob = Xml.DocumentElement.SelectNodes("saveJob")[jobList.Count-1];
+            saveJob.AppendChild(Xml.CreateElement("Id"));
+            saveJob.AppendChild(Xml.CreateElement("Name"));
+            saveJob.AppendChild(Xml.CreateElement("Source"));
+            saveJob.AppendChild(Xml.CreateElement("Destination"));
+            saveJob.AppendChild(Xml.CreateElement("Type"));
+            UpdateNode(jobList, saveJob, jobList.Count-1);
         }
+
     }
     class BackupJobDataModel
     {

@@ -35,30 +35,28 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
             RealTime.CreateRealTimeFile();
             return true;
         }
-        public void CreateJobVM(string name, string source, string destination, int type)
+        public int CreateJob(string name, string source, string Destination, int type)
         {
-            BackupJobsData.Add(new BackupJobDataModel());
-            BackupJobsData[BackupJobsData.Count - 1].Id = BackupJobsData.Count - 1;
-            BackupJobsData[BackupJobsData.Count - 1].Name = name;
-            BackupJobsData[BackupJobsData.Count - 1].Source = source;
-            BackupJobsData[BackupJobsData.Count - 1].Destination = destination;
-            BackupJobsData[BackupJobsData.Count - 1].Type = type;
-            BackupJobs.SaveParam(BackupJobsData);
+            BackupJobDataModel newJob = new BackupJobDataModel
+            {
+                Id = BackupJobsData.Count,
+                Name = name,
+                Source = source,
+                Destination = Destination,
+                Type = type
+            };
+            BackupJobsData.Add(newJob);
+            BackupJobs.CreateJob(BackupJobsData);
+            return newJob.Id;
         }
-        public void DeleteJobVM(int job) 
+        public errorCode DeleteJobVM(int job)
         {
             BackupJobsData.RemoveAt(job);
             BackupJobs.DestroyNode(job);
             BackupJobs.SaveParam(BackupJobsData);
-            BackupJobs.UpdateJobId(BackupJobsData);
+            BackupJobs.UpdateJobList(BackupJobsData);
+            return errorCode.SUCCESS;
         }
-        /// <summary>
-        /// Method to update backup jobs
-        /// </summary>
-        /// <param name="jobChoice"></param>
-        /// <param name="change"></param>
-        /// <param name="newValue"></param>
-        /// <returns></returns>
         public errorCode UpdateJob(int jobChoice, string change, string newValue) 
         {   // Utilisation d'un switch case
             switch (change)

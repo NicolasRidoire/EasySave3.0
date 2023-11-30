@@ -1,6 +1,7 @@
 ﻿using PROGRAMMATION_SYST_ME.Model;
 using PROGRAMMATION_SYST_ME.ViewModel;
 using System;
+using System.Threading.Channels;
 public enum errorCode
 {
     SUCCESS = 0, // Allow code to continue
@@ -97,13 +98,13 @@ namespace PROGRAMMATION_SYST_ME.View
         /// </summary>
         private void CreateJob()
         {
-            Console.WriteLine("Enter a name :");
+            Console.WriteLine("Enter the name of the backup job you want to create :");
             var name = Console.ReadLine();
-            Console.WriteLine("Enter a source directory or file :");
+            Console.WriteLine("Enter the source of " +  name + " :");
             var source = Console.ReadLine();
-            Console.WriteLine("Enter a destination directory :");
-            var destination = Console.ReadLine();
-            Console.WriteLine("Enter a backup type (O for complete backup or 1 for diferencial backup");
+            Console.WriteLine("Enter the destination of " + name + " :");
+            var dest = Console.ReadLine();
+            Console.WriteLine("Enter the type of " + name + " (0 for full backup or 1 for differential backup) :");
             int type;
             try // Convertion from string to int is risky
             {
@@ -114,25 +115,54 @@ namespace PROGRAMMATION_SYST_ME.View
                 error = errorCode.INPUT_ERROR;
                 return;
             }
-            if (!(type >= 0 && type <= 1))
+            if (!(jobChoice >= 0 && jobChoice <= 1))
             {
                 error = errorCode.INPUT_ERROR;
                 return;
             }
-            Console.WriteLine($"N -> Name : {name}");
-            Console.WriteLine($"S -> Source path : {source}");
-            Console.WriteLine($"D -> Destination path : {destination}");
-            Console.WriteLine("T -> Type : {0}", type == 0 ? "Full backup" : "Differential backup");
-            Console.WriteLine("Enter C to confirm or anything else to cancel");
-            if (Console.ReadLine() == "C")
-                userInteract.CreateJobVM(name, source, destination, type);
+            int id = userInteract.CreateJob(name, source, dest, type);
+            ShowParam(id);
+            Console.WriteLine("Confirm : (M to Modify or anything else to confirm)");
+            if (Console.ReadLine() == "M")
+            {
+                Console.Clear();
+                ShowParam(id);
+                UpdateChoice();
+            }
+        }
+
+        public void DeleteJob()
+        {
+            Console.WriteLine("Select the backup job to delete : ");
+            int jobChoice;
+            try // Convertion from string to int is risky
+            {
+                jobChoice = int.Parse(Console.ReadLine()) - 1;
+            }
+            catch (System.FormatException)
+            {
+                error = errorCode.INPUT_ERROR;
+                return;
+            }
+            Console.WriteLine("Confirm that you want to delete this backup job :");
+            ShowParam(jobChoice);
+            Console.WriteLine("\nEnter C to Confirm");
+            var change = Console.ReadLine();
+            switch (change)
+            {
+                case "C":
+                    error = userInteract.DeleteJob(jobChoice);
+                    break;
+                default:
+                    return;
+            }
         }
         /// <summary>
         /// Modify a pre-existring backup job
         /// </summary>
         private void ModifyJob() 
         {
-            Console.WriteLine("Select the backup job to modify (Between 1 to 5) : ");
+            Console.WriteLine("Select the backup job to modify : ");
             int jobChoice;
             try // Convertion from string to int is risky
             {
@@ -192,29 +222,7 @@ namespace PROGRAMMATION_SYST_ME.View
                 ChangeValue(jobChoice);
             }
         }
-        private void DeleteJob()
-        {
-            Console.WriteLine("Select the backup job to delete (Between 1 to 5) :");
-            int jobChoice;
-            try // Convertion from string to int is risky
-            {
-                jobChoice = int.Parse(Console.ReadLine()) - 1;
-            }
-            catch (System.FormatException)
-            {
-                error = errorCode.INPUT_ERROR;
-                return;
-            }
-            if (!(jobChoice >= 0 && jobChoice < userInteract.BackupJobsData.Count))
-            {
-                error = errorCode.INPUT_ERROR;
-                return;
-            }
-            ShowParam(jobChoice);
-            Console.WriteLine("Enter C to Confirm deletion of this backup job or anything else to cancel");
-            if (Console.ReadLine() == "C")
-                userInteract.DeleteJobVM(jobChoice);
-        }
+        
         /// <summary>
         /// method that allows the user to select the extension of the log file
         /// </summary>
