@@ -11,6 +11,7 @@ namespace PROGRAMMATION_SYST_ME.Ressources
     {
         public static string WelcomeMessage => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "WelcomeMessage");
         public static string BackupInformation => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "BackupInformation");
+        public static string SaveInfo => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "SaveInfo");
         public static string Language => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "language");
         public static string Delete => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "Delete");
         public static string Create => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "create");
@@ -26,6 +27,9 @@ namespace PROGRAMMATION_SYST_ME.Ressources
         public static string LabSaveT => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "LabSaveT");
         public static string ButCancel => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "ButCancel");
         public static string ButValidate => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "ButValidate");
+        public static string BackupEnd => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "BackupEnd");
+        public static string BackupError => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "BackupError");
+
 
 
     }

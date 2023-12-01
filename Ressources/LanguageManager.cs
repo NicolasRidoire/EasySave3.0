@@ -29,7 +29,10 @@ public static class LanguageManager
             { "LabDest", "Destination :" },
             { "LabSaveT", "Backup type :" },
             { "ButCancel", "Cancel" },
-            { "ButValidate", "Ok" }
+            { "ButValidate", "Ok" },
+            { "SaveInfo", "Name - Status - Progression" },
+            { "BackupEnd", "Backups ended without a problem" },
+            { "BackupError", "Error : Backup ended with error code " }
         };
 
         languages["fr-FR"] = new Dictionary<string, string>
@@ -48,9 +51,12 @@ public static class LanguageManager
             { "LabId", "ID :" },
             { "LabSource", "Dossier source :" },
             { "LabDest", "Destination :" },
-            { "LabSaveT", "Type de sauvegarde :" },
+            { "LabSaveT", "Sauvegarde :" },
             { "ButCancel", "Annuler" },
-            { "ButValidate", "Valider" }
+            { "ButValidate", "Valider" },
+            { "SaveInfo", "Nom - Statut - Progression" },
+            { "BackupEnd", "Les sauvegardes se sont déroulées sans problème"},
+            { "BackupError", "Erreur : Sauvegarde terminée avec le code d'erreur "}
 
         };
     }

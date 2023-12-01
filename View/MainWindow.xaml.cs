@@ -11,6 +11,7 @@ using PROGRAMMATION_SYST_ME.Model;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows.Threading;
 
 public enum errorCode
 {
@@ -48,6 +49,7 @@ namespace PROGRAMMATION_SYST_ME.View
                 json.IsChecked = true;
             else
                 xml.IsChecked = true;
+            iconLoad.Visibility = Visibility.Hidden;
             UpdateUI();
         }
         public double InfoSaveWidth
@@ -75,7 +77,8 @@ namespace PROGRAMMATION_SYST_ME.View
             string language = ((RadioButton)sender).Tag.ToString();
 
             ChangeLanguage(language);
-
+            if (IsOpen(updateWind))
+                updateWind.ChangeLang();
             UpdateUI();
         }
 
@@ -174,12 +177,28 @@ namespace PROGRAMMATION_SYST_ME.View
 
         private void Execut_Click(object sender, RoutedEventArgs e)
         {
-            List<int> jobsToExec = new ();
-            foreach (var item in BackupList.SelectedItems)
+            if (BackupList.SelectedItems.Count > 0)
             {
-                jobsToExec.Add((item.ToString()[0] - '0') - 1);
+                List<int> jobsToExec = new ();
+                foreach (var item in BackupList.SelectedItems)
+                {
+                    jobsToExec.Add((item.ToString()[0] - '0') - 1);
+                }
+                iconLoad.Visibility = Visibility.Visible;
+                UpdateLayout();
+                // Used to wait for iconLoad to show
+                Dispatcher.Invoke(() => { error = userInteract.ExecuteJob(jobsToExec); }, DispatcherPriority.ContextIdle);
+                if (error == errorCode.SUCCESS)
+                { 
+                    MessageBox.Show(LocalizedStrings.BackupEnd, "SaveFinished",
+                                MessageBoxButton.OK);
+                } else
+                {
+                    MessageBox.Show(LocalizedStrings.BackupError + error, "BackupProblem",
+                                MessageBoxButton.YesNo);
+                }
+                iconLoad.Visibility = Visibility.Hidden;
             }
-            error = userInteract.ExecuteJob(jobsToExec);
         }
         private void RadioExt_Checked(object sender, RoutedEventArgs e)
         {
