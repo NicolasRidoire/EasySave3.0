@@ -9,7 +9,7 @@ using Microsoft.VisualBasic.FileIO;
 
 namespace PROGRAMMATION_SYST_ME.Model
 {
-    internal class RealTimeModel
+    public class RealTimeModel
     {
         private string realTimeFile;
         public string ExtRealTime { get; set; }
@@ -82,7 +82,7 @@ namespace PROGRAMMATION_SYST_ME.Model
             return element;
         }
     }
-    internal class RealTimeDataModel
+    public class RealTimeDataModel
     {
         public BackupJobDataModel SaveData { get; set; }
         public string State { get; set; }

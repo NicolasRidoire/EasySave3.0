@@ -8,8 +8,8 @@ using System.Diagnostics;
 
 namespace PROGRAMMATION_SYST_ME.ViewModel
 {
-    class UserInteractionViewModel
-    {
+    public class UserInteractionViewModel
+    { 
         public List<BackupJobDataModel> BackupJobsData { set; get; } = new List<BackupJobDataModel>();
         public BackupJobModel BackupJobs { set; get; }
         public List<RealTimeDataModel> RealTimeData { set; get; } = new List<RealTimeDataModel>();
@@ -57,23 +57,12 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
             BackupJobs.UpdateList(BackupJobsData);
             return errorCode.SUCCESS;
         }
-        public errorCode UpdateJob(int jobChoice, string change, string newValue)
-        {   // Utilisation d'un switch case
-            switch (change)
-            {
-                case "N":
-                    BackupJobsData[jobChoice].Name = newValue;
-                    break;
-                case "S":
-                    BackupJobsData[jobChoice].Source = newValue;
-                    break;
-                case "D":
-                    BackupJobsData[jobChoice].Destination = newValue;
-                    break;
-                case "T":
-                    BackupJobsData[jobChoice].Type = int.Parse(newValue);
-                    break;
-            }
+        public errorCode UpdateJob(int jobChoice, string name, string source, string dest, int type)
+        {   
+            BackupJobsData[jobChoice].Name = name;
+            BackupJobsData[jobChoice].Source = source;
+            BackupJobsData[jobChoice].Destination = dest;
+            BackupJobsData[jobChoice].Type = type;
             BackupJobs.SaveParam(BackupJobsData);
             return errorCode.SUCCESS;
         }

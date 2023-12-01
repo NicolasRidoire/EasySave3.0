@@ -9,7 +9,7 @@ namespace PROGRAMMATION_SYST_ME.Model
     /// <summary>
     /// Model class for a list of 5 backup jobs
     /// </summary>
-    class BackupJobModel
+    public class BackupJobModel
     {
         public XmlDocument Xml { set; get; } = new XmlDocument();
         private readonly string xmlPath;
@@ -104,7 +104,7 @@ namespace PROGRAMMATION_SYST_ME.Model
         }
 
     }
-    class BackupJobDataModel
+    public class BackupJobDataModel
     {
         public int Id {  get; set; }
         public string Name { get; set; }

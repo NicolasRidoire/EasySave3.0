@@ -5,7 +5,12 @@
     <TargetFramework>net5.0-windows7.0</TargetFramework>
     <RootNamespace>PROGRAMMATION_SYST_ME</RootNamespace>
     <UseWPF>True</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Ressources\FolderIcon.png" />
+  </ItemGroup>
 
   <ItemGroup>
     <Page Include="App.xaml" />
@@ -14,6 +19,9 @@
   <ItemGroup>
     <None Update="SaveJobsConfig.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="View\FolderIcon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

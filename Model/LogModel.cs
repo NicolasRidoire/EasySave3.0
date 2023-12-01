@@ -8,7 +8,7 @@ namespace PROGRAMMATION_SYST_ME.Model
     /// <summary>
     /// Log model class
     /// </summary>
-    class LogModel
+    public class LogModel
     {
         public XmlDocument Xml { set; get; } = new XmlDocument();
         public XmlDocument logXml { set; get; } = new XmlDocument();
@@ -107,7 +107,7 @@ namespace PROGRAMMATION_SYST_ME.Model
             }
         }
     }
-    class LogDataModel
+    public class LogDataModel
     {
         public BackupJobDataModel LogData { get; set;}
         public long ElapsedTime { get; set;}
