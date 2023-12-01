@@ -121,8 +121,13 @@ namespace PROGRAMMATION_SYST_ME.View
                 {
                     for (int i = BackupList.SelectedItems.Count - 1; i >= 0; i--)
                     {
-                        error = userInteract.DeleteJobVM(BackupList.SelectedItems[i].ToString()[0] - '0' - 1);
-                        BackupList.Items.RemoveAt(BackupList.SelectedItems[i].ToString()[0] - '0' - 1);
+                        var index = BackupList.SelectedItems[i].ToString()[0] - '0' - 1;
+                        if (BackupList.SelectedItems[i].ToString()[0] - '0' - 1 == userInteract.BackupJobsData.Count)
+                        {
+                            index--;
+                        }
+                        error = userInteract.DeleteJobVM(index);
+                        BackupList.Items.RemoveAt(index);
                     }
                 }
             }
