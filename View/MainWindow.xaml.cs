@@ -9,7 +9,8 @@ using PROGRAMMATION_SYST_ME.Ressources;
 using PROGRAMMATION_SYST_ME.ViewModel;
 using PROGRAMMATION_SYST_ME.Model;
 using System.Collections.Generic;
-using System.Windows.Markup;
+using System.Diagnostics;
+using System.Linq;
 
 public enum errorCode
 {
@@ -25,25 +26,29 @@ namespace PROGRAMMATION_SYST_ME.View
     public partial class MainWindow : Window
     {
         public errorCode error { set; get; }
-        private readonly UserInteractionViewModel userInteract = new();
+        public readonly UserInteractionViewModel userInteract = new();
         private double _infoSaveWidth;
+        private UpdateWorkJobView updateWind;
         public MainWindow()
         {
+            Process proc = Process.GetCurrentProcess();
+            int count = Process.GetProcesses().Where(p =>
+                p.ProcessName == proc.ProcessName).Count();
+            if (count > 1)
+            {
+                App.Current.Shutdown();
+            }
             InitializeComponent();
             foreach (BackupJobDataModel job in userInteract.BackupJobsData)
             {
-                var jobString = (job.Id + 1).ToString();
-                jobString += job.Name;
-                jobString += job.Source;
-                jobString += job.Destination;
-                jobString += job.Type == 0 ? LocalizedStrings.ComplSave : LocalizedStrings.DifSave;
-                BackupList.Items.Add(jobString);
+                BackupList.Items.Add("");
             }
             EN.IsChecked = true;
             if (userInteract.LogFile.ExtLog == "json")
                 json.IsChecked = true;
             else
                 xml.IsChecked = true;
+            UpdateUI();
         }
         public double InfoSaveWidth
         {
@@ -74,14 +79,14 @@ namespace PROGRAMMATION_SYST_ME.View
             UpdateUI();
         }
 
-        private void ChangeLanguage(string language)
+        private static void ChangeLanguage(string language)
         {
             CultureInfo newCulture = new CultureInfo(language);
             Thread.CurrentThread.CurrentCulture = newCulture;
             Thread.CurrentThread.CurrentUICulture = newCulture;
         }
 
-        private void UpdateUI()
+        public void UpdateUI()
         {
             welcomeTextBlock.Text = LocalizedStrings.WelcomeMessage;
             info_save.Text = LocalizedStrings.BackupInformation;
@@ -96,21 +101,36 @@ namespace PROGRAMMATION_SYST_ME.View
             foreach (BackupJobDataModel job in userInteract.BackupJobsData)
             {
                 var jobString = (job.Id + 1).ToString();
+                var spacing = "    -    ";
+                jobString += spacing;
                 jobString += job.Name;
-                jobString += job.Source;
-                jobString += job.Destination;
+                jobString += spacing;
                 jobString += job.Type == 0 ? LocalizedStrings.ComplSave : LocalizedStrings.DifSave;
                 BackupList.Items[i] = jobString;
                 i++;
             }
         }
 
-        private void create_Click(object sender, RoutedEventArgs e)
+        private void Create_Click(object sender, RoutedEventArgs e)
         {
-
+            OpenUpdateWorkJobWindow(-1);
+            updateWind.IsAdd = true;
+        }
+        private void SetBackupInfoForUpdateWin(int id)
+        {
+            if (id == -1)
+                updateWind.Id = userInteract.BackupJobsData.Count;
+            else
+            {
+                updateWind.Id = userInteract.BackupJobsData[id].Id;
+                updateWind.SaveName = userInteract.BackupJobsData[id].Name;
+                updateWind.Source = userInteract.BackupJobsData[id].Source;
+                updateWind.Dest = userInteract.BackupJobsData[id].Destination;
+                updateWind.Type = userInteract.BackupJobsData[id].Type;
+            }
         }
 
-        private void delete_Click(object sender, RoutedEventArgs e)
+        private void Delete_Click(object sender, RoutedEventArgs e)
         {
             if (BackupList.SelectedItems.Count != 0)
             {
@@ -134,14 +154,27 @@ namespace PROGRAMMATION_SYST_ME.View
             UpdateUI();
         }
 
-        private void update_Click(object sender, RoutedEventArgs e)
+        private void Update_Click(object sender, RoutedEventArgs e)
         {
-
+            if (BackupList.SelectedIndex != -1)
+            {
+                OpenUpdateWorkJobWindow(BackupList.SelectedIndex);
+                updateWind.IsAdd = false;
+            } // Update UI of main window
+        }
+        private void OpenUpdateWorkJobWindow(int id)
+        {
+            if (!IsOpen(updateWind))
+                updateWind = new UpdateWorkJobView(this);
+            updateWind.Show();
+            updateWind.Activate();
+            SetBackupInfoForUpdateWin(id);
+            updateWind.UpdateUI();
         }
 
         private void Execut_Click(object sender, RoutedEventArgs e)
         {
-            List<int> jobsToExec = new List<int>();
+            List<int> jobsToExec = new ();
             foreach (var item in BackupList.SelectedItems)
             {
                 jobsToExec.Add((item.ToString()[0] - '0') - 1);
@@ -152,6 +185,14 @@ namespace PROGRAMMATION_SYST_ME.View
         {
             string ext = ((RadioButton)sender).Tag.ToString();
             userInteract.ChangeExtensionLog(ext);
+        }
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            updateWind?.Close();
+        }
+        public static bool IsOpen(Window window)
+        {
+            return Application.Current.Windows.Cast<Window>().Any(x => x == window);
         }
     }
 }

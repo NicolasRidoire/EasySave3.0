@@ -7,7 +7,8 @@
         xmlns:vm="clr-namespace:PROGRAMMATION_SYST_ME.Ressources"
         mc:Ignorable="d"
         Title="EasySave 2.0" Height="563" Width="926" Background="#FFDAAB3A"
-        MinWidth="950" MinHeight="620">
+        MinWidth="950" MinHeight="620"
+        Closing="Window_Closing">
 
 
     <Grid Margin="2,34,0,22">
@@ -55,9 +56,9 @@
                     </LinearGradientBrush>
                 </Rectangle.Fill>
             </Rectangle>
-            <Viewbox Grid.Column="2" Grid.ColumnSpan="2" Margin="112,60,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="Uniform">
-                <TextBlock x:Name="info_save" TextWrapping="Wrap" Foreground="#FFEDEDED" FontWeight="Bold" FontSize="14" Width="500">
-        <Run Text="{x:Static local:LocalizedStrings.BackupInformation}"/>
+            <Viewbox Grid.Column="2" Grid.ColumnSpan="2" Margin="112,60,80,0" HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="Uniform">
+                <TextBlock x:Name="info_save" TextWrapping="Wrap" Foreground="#FFEDEDED" FontWeight="Bold" FontSize="14" Width="369" Margin="5,0,0,0">
+                    <Run Text="{x:Static local:LocalizedStrings.BackupInformation}"/>
                 </TextBlock>
             </Viewbox>
 
@@ -80,11 +81,12 @@
         </StackPanel>
 
         <UniformGrid x:Name="buttonsUniformGrid" Grid.Row="1" Columns="4" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,22" Grid.ColumnSpan="5" Height="30" Width="551">
-            <Button x:Name="create" Content="{x:Static local:LocalizedStrings.Create}" Width="100" Background="Black" BorderBrush="White" Foreground="White" FontWeight="Bold" FontStyle="Normal" ClickMode="Press" Cursor="Hand" Click="create_Click"/>
-            <Button x:Name="delete" Content="{x:Static local:LocalizedStrings.Delete}" Width="100" Background="Black" BorderBrush="White" Foreground="White" FontWeight="Bold" Cursor="Hand" Click="delete_Click"/>
-            <Button x:Name="update" Content="{x:Static local:LocalizedStrings.Update}" Width="100" Foreground="White" BorderBrush="#FFF7F7F7" Background="#FF080808" FontWeight="Bold" Cursor="Hand" Click="update_Click"/>
+            <Button x:Name="create" Content="{x:Static local:LocalizedStrings.Create}" Width="100" Background="Black" BorderBrush="White" Foreground="White" FontWeight="Bold" FontStyle="Normal" ClickMode="Press" Cursor="Hand" Click="Create_Click"/>
+            <Button x:Name="delete" Content="{x:Static local:LocalizedStrings.Delete}" Width="100" Background="Black" BorderBrush="White" Foreground="White" FontWeight="Bold" Cursor="Hand" Click="Delete_Click"/>
+            <Button x:Name="update" Content="{x:Static local:LocalizedStrings.Update}" Width="100" Foreground="White" BorderBrush="#FFF7F7F7" Background="#FF080808" FontWeight="Bold" Cursor="Hand" Click="Update_Click"/>
             <Button x:Name="Execut" Content="{x:Static local:LocalizedStrings.Execut}" Width="100" Background="Black" Foreground="White" FontWeight="Bold" BorderBrush="White" Margin="39,0,-1,0" Cursor="Hand" Click="Execut_Click"/>
         </UniformGrid>
-        <ListBox x:Name="BackupList" Background="#FF7F7777" Grid.ColumnSpan="5" Grid.Row="1" Margin="88,131,69,100" SelectionMode="Multiple"/>
+        <ListBox x:Name="BackupList" Grid.ColumnSpan="5" Grid.Row="1" Margin="88,131,69,100" SelectionMode="Multiple" BorderBrush="{x:Null}" FontSize="22">
+        </ListBox>
     </Grid>
 </Window>

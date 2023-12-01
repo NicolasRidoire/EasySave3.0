@@ -14,7 +14,7 @@ public static class LanguageManager
         languages["en-US"] = new Dictionary<string, string>
         {
             { "WelcomeMessage", "Welcome to EasySave, your backup software!" },
-            { "BackupInformation", "File ID    |     name     |    source     |    destination    |   Backup type" },
+            { "BackupInformation", "ID - Name - Backup type" },
             { "description" ,"Choose your backup"  },
             { "language" ,"Choose your language  :" },
             { "create" ,"Create" },
@@ -22,14 +22,20 @@ public static class LanguageManager
             { "Execut" ,"Execute" },
             { "Delete" ,"Delete" },
             { "ComplSave", "Complete" },
-            { "DifSave", "Diferencial" }
-
+            { "DifSave", "Diferencial" },
+            { "LabName", "Name :" },
+            { "LabId", "ID :" },
+            { "LabSource", "Source folder :" },
+            { "LabDest", "Destination :" },
+            { "LabSaveT", "Backup type :" },
+            { "ButCancel", "Cancel" },
+            { "ButValidate", "Ok" }
         };
 
         languages["fr-FR"] = new Dictionary<string, string>
         {
             { "WelcomeMessage", "Bienvenue dans EasySave, votre logiciel de sauvegarde !" },
-            { "BackupInformation", "ID de fichier   |   nom |     source    |    destination    |   Type" },
+            { "BackupInformation", "ID - Nom - Type" },
             { "description" ,"Choisissez votre sauvegarde"  },
             { "language" ,"Choisissez votre langue : "  },
             { "create" ,"Créer" },
@@ -37,7 +43,15 @@ public static class LanguageManager
             { "Execut" ,"Executer"},
             { "Delete" ,"Supprimer" },
             { "ComplSave","Complète" },
-            { "DifSave","Différentielle" }
+            { "DifSave","Différentielle" },
+            { "LabName","Nom :" },
+            { "LabId", "ID :" },
+            { "LabSource", "Dossier source :" },
+            { "LabDest", "Destination :" },
+            { "LabSaveT", "Type de sauvegarde :" },
+            { "ButCancel", "Annuler" },
+            { "ButValidate", "Valider" }
+
         };
     }
 

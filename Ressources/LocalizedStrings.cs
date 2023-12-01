@@ -19,6 +19,13 @@ namespace PROGRAMMATION_SYST_ME.Ressources
         public static string Description => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "description");
         public static string ComplSave => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "ComplSave");
         public static string DifSave => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "DifSave");
+        public static string LabName => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "LabName");
+        public static string LabId => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "LabId");
+        public static string LabSource => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "LabSource");
+        public static string LabDest => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "LabDest");
+        public static string LabSaveT => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "LabSaveT");
+        public static string ButCancel => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "ButCancel");
+        public static string ButValidate => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "ButValidate");
 
 
     }

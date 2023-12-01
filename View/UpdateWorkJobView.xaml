@@ -1,0 +1,56 @@
+﻿<Window x:Class="PROGRAMMATION_SYST_ME.View.UpdateWorkJobView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PROGRAMMATION_SYST_ME.Ressources"
+        xmlns:vm="clr-namespace:PROGRAMMATION_SYST_ME.Ressources"
+        mc:Ignorable="d"
+        Title="Update Save" Height="450" Width="800"
+        Name="updateSave"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="ToolWindow">
+    <Grid Background="#FF5C5C5C">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <TextBox x:Name="BoxId" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="0" HorizontalAlignment="Center" TextWrapping="NoWrap" VerticalAlignment="Center" Width="372" Height="30" IsEnabled="False" FontSize="18" FontWeight="Bold"/>
+        <Label x:Name="LabelId" HorizontalAlignment="Right" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" FontSize="18" FontWeight="Bold" Content="{x:Static local:LocalizedStrings.LabId}" Background="{x:Null}" Foreground="White"></Label>
+
+        <TextBox x:Name="BoxName" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="1" HorizontalAlignment="Center" TextWrapping="NoWrap" VerticalAlignment="Center" Width="372" Height="30" FontSize="18" FontWeight="Bold"/>
+        <Label x:Name="LabelName" HorizontalAlignment="Right" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" FontSize="18" FontWeight="Bold" Content="{x:Static local:LocalizedStrings.LabName}" Background="{x:Null}" Foreground="White"></Label>
+
+        <TextBox x:Name="BoxSource" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="2" HorizontalAlignment="Center" TextWrapping="NoWrap" VerticalAlignment="Center" Width="372" Height="30" FontSize="18" FontWeight="Bold"/>
+        <Button x:Name="ButtonSource" Grid.Column="3" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Click="ButtonSource_Click" Height="30" Width="52"/>
+        <!-- Folder Image-->
+        <Label x:Name="LabelSource" HorizontalAlignment="Right" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" FontSize="18" FontWeight="Bold" Content="{x:Static local:LocalizedStrings.LabSource}" Background="{x:Null}" Foreground="White"></Label>
+
+        <TextBox x:Name="BoxDest" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="3" HorizontalAlignment="Center" TextWrapping="NoWrap" VerticalAlignment="Center" Width="372" Height="30" FontSize="18" FontWeight="Bold"/>
+        <Button x:Name="ButtonDest" Grid.Column="3" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Click="ButtonSource_Click" Height="30" Width="52"/>
+        <!-- Folder Image-->
+        <Label x:Name="LabelDest" HorizontalAlignment="Right" Grid.Column="0" Grid.Row="3" VerticalAlignment="Center" FontSize="18" FontWeight="Bold" Content="{x:Static local:LocalizedStrings.LabDest}" Background="{x:Null}" Foreground="White"></Label>
+
+        <ComboBox x:Name="ComboType" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center" Width="372" Height="30" FontSize="18" FontWeight="Bold">
+            <ComboBoxItem Content="{x:Static local:LocalizedStrings.ComplSave}"></ComboBoxItem>
+            <ComboBoxItem Content="{x:Static local:LocalizedStrings.DifSave}"></ComboBoxItem>
+        </ComboBox>
+        <Label x:Name="LabelType" HorizontalAlignment="Right" Grid.Column="0" Grid.Row="4" VerticalAlignment="Center" FontSize="18" FontWeight="Bold" Content="{x:Static local:LocalizedStrings.LabSaveT}" Background="{x:Null}" Foreground="White"></Label>
+
+        <Button x:Name="ButtonCancel" Tag="0" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" Grid.Row="5" FontSize="18" FontWeight="Bold" Content="{x:Static local:LocalizedStrings.ButCancel}" Width="87" Click="ButtonCancel_Click" Background="Black" Foreground="White" BorderBrush="White"></Button>
+        <Button x:Name="ButtonValidate" Tag="1" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="3" Grid.Row="5" FontSize="18" FontWeight="Bold" Content="{x:Static local:LocalizedStrings.ButValidate}" Width="87" Click="ButtonValidate_Click" BorderBrush="White" Foreground="White" Background="Black"></Button>
+
+    </Grid>
+</Window>
