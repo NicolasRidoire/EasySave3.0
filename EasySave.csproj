@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows7.0</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <RootNamespace>PROGRAMMATION_SYST_ME</RootNamespace>
     <UseWPF>True</UseWPF>
   </PropertyGroup>
@@ -18,9 +18,6 @@
   <ItemGroup>
     <None Update="SaveJobsConfig.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="FolderIcon.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PROGRAMMATION_SYST_ME.Ressources"
         xmlns:vm="clr-namespace:PROGRAMMATION_SYST_ME.Ressources"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d"
         Title="Update Save" Height="450" Width="800"
         Name="updateSave"
@@ -34,13 +35,15 @@
         <Label x:Name="LabelName" HorizontalAlignment="Right" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" FontSize="18" FontWeight="Bold" Content="{x:Static local:LocalizedStrings.LabName}" Background="{x:Null}" Foreground="White"></Label>
 
         <TextBox x:Name="BoxSource" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="2" HorizontalAlignment="Center" TextWrapping="NoWrap" VerticalAlignment="Center" Width="372" Height="30" FontSize="18" FontWeight="Bold"/>
-        <Button x:Name="ButtonSource" Grid.Column="3" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Click="ButtonSource_Click" Height="30" Width="52"/>
-        <!-- Folder Image-->
+        <Button x:Name="ButtonSource" Grid.Column="3" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Click="ButtonSource_Click" Height="30" Width="52">
+            <fa:ImageAwesome HorizontalAlignment="Center" VerticalAlignment="Center" Icon="Folder"/>
+        </Button>
         <Label x:Name="LabelSource" HorizontalAlignment="Right" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" FontSize="18" FontWeight="Bold" Content="{x:Static local:LocalizedStrings.LabSource}" Background="{x:Null}" Foreground="White"></Label>
 
         <TextBox x:Name="BoxDest" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="3" HorizontalAlignment="Center" TextWrapping="NoWrap" VerticalAlignment="Center" Width="372" Height="30" FontSize="18" FontWeight="Bold"/>
-        <Button x:Name="ButtonDest" Grid.Column="3" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Click="ButtonDest_Click" Height="30" Width="52"/>
-        <!-- Folder Image-->
+        <Button x:Name="ButtonDest" Grid.Column="3" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Click="ButtonDest_Click" Height="30" Width="52">
+            <fa:ImageAwesome HorizontalAlignment="Center" VerticalAlignment="Center" Icon="Folder"/>
+        </Button>
         <Label x:Name="LabelDest" HorizontalAlignment="Right" Grid.Column="0" Grid.Row="3" VerticalAlignment="Center" FontSize="18" FontWeight="Bold" Content="{x:Static local:LocalizedStrings.LabDest}" Background="{x:Null}" Foreground="White"></Label>
 
         <ComboBox x:Name="ComboType" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center" Width="372" Height="30" FontSize="18" FontWeight="Bold">

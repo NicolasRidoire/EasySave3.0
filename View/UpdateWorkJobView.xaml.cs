@@ -1,5 +1,7 @@
-﻿using PROGRAMMATION_SYST_ME.Ressources;
+﻿using Microsoft.Win32;
+using PROGRAMMATION_SYST_ME.Ressources;
 using PROGRAMMATION_SYST_ME.ViewModel;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -42,11 +44,27 @@ namespace PROGRAMMATION_SYST_ME.View
         }
         private void ButtonSource_Click(object sender, RoutedEventArgs e)
         {
-            
+            var folderDialog = new OpenFolderDialog
+            {
+                Title = "Select Source Folder"
+            };
+
+            if (folderDialog.ShowDialog() == true)
+            {
+                BoxSource.Text = folderDialog.FolderName;
+            }
         }
         private void ButtonDest_Click(object sender, RoutedEventArgs e)
         {
-            
+            var folderDialog = new OpenFolderDialog
+            {
+                Title = "Select Destination Folder"
+            };
+
+            if (folderDialog.ShowDialog() == true)
+            {
+                BoxDest.Text = folderDialog.FolderName;
+            }
         }
         private void ButtonCancel_Click(object sender, RoutedEventArgs e)
         {
