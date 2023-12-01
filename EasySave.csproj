@@ -5,11 +5,10 @@
     <TargetFramework>net5.0-windows7.0</TargetFramework>
     <RootNamespace>PROGRAMMATION_SYST_ME</RootNamespace>
     <UseWPF>True</UseWPF>
-    <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Ressources\FolderIcon.png" />
+    <PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,7 +19,7 @@
     <None Update="SaveJobsConfig.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="View\FolderIcon.png">
+    <None Update="FolderIcon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

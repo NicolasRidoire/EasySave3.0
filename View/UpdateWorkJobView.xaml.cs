@@ -1,4 +1,5 @@
-﻿using PROGRAMMATION_SYST_ME.ViewModel;
+﻿using PROGRAMMATION_SYST_ME.Ressources;
+using PROGRAMMATION_SYST_ME.ViewModel;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -21,6 +22,16 @@ namespace PROGRAMMATION_SYST_ME.View
             this.handleWin = handleWin;
             InitializeComponent();
         }
+        public void ChangeLang()
+        {
+            LabelId.Content = LocalizedStrings.LabId;
+            LabelName.Content = LocalizedStrings.LabName;
+            LabelSource.Content = LocalizedStrings.LabSource;
+            LabelDest.Content = LocalizedStrings.LabDest;
+            LabelType.Content = LocalizedStrings.LabSaveT;
+            ButtonCancel.Content = LocalizedStrings.ButCancel;
+            ButtonValidate.Content = LocalizedStrings.ButValidate;
+        }
         public void UpdateUI()
         {
             BoxId.Text = (Id + 1).ToString();
@@ -31,7 +42,11 @@ namespace PROGRAMMATION_SYST_ME.View
         }
         private void ButtonSource_Click(object sender, RoutedEventArgs e)
         {
-
+            
+        }
+        private void ButtonDest_Click(object sender, RoutedEventArgs e)
+        {
+            
         }
         private void ButtonCancel_Click(object sender, RoutedEventArgs e)
         {
@@ -61,5 +76,7 @@ namespace PROGRAMMATION_SYST_ME.View
             handleWin.UpdateUI();
             Close();
         }
+
+       
     }
 }

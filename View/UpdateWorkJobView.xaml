@@ -39,7 +39,7 @@
         <Label x:Name="LabelSource" HorizontalAlignment="Right" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" FontSize="18" FontWeight="Bold" Content="{x:Static local:LocalizedStrings.LabSource}" Background="{x:Null}" Foreground="White"></Label>
 
         <TextBox x:Name="BoxDest" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="3" HorizontalAlignment="Center" TextWrapping="NoWrap" VerticalAlignment="Center" Width="372" Height="30" FontSize="18" FontWeight="Bold"/>
-        <Button x:Name="ButtonDest" Grid.Column="3" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Click="ButtonSource_Click" Height="30" Width="52"/>
+        <Button x:Name="ButtonDest" Grid.Column="3" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Click="ButtonDest_Click" Height="30" Width="52"/>
         <!-- Folder Image-->
         <Label x:Name="LabelDest" HorizontalAlignment="Right" Grid.Column="0" Grid.Row="3" VerticalAlignment="Center" FontSize="18" FontWeight="Bold" Content="{x:Static local:LocalizedStrings.LabDest}" Background="{x:Null}" Foreground="White"></Label>
 
