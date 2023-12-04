@@ -161,8 +161,9 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
                 return errorCode.SOURCE_ERROR;
             DirectoryInfo[] dirs = dir.GetDirectories();
             var dirDest = new DirectoryInfo(destination);
-            if (dirDest.Exists)
-                Directory.Delete(destination, true);
+            if (delegCopy == CopyFile)
+                if (dirDest.Exists)
+                    Directory.Delete(destination, true);
             Directory.CreateDirectory(destination);
             foreach (FileInfo file in dir.GetFiles())
             {
