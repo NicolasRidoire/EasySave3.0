@@ -190,6 +190,7 @@ namespace PROGRAMMATION_SYST_ME.View
                 Thread.Sleep(500);
                 // Used to wait for iconLoad to show
                 Dispatcher.Invoke(() => { error = userInteract.ExecuteJob(jobsToExec); }, DispatcherPriority.ContextIdle);
+                while (Process.GetProcessesByName("Cryptosoft").Length > 0);
                 if (error == errorCode.SUCCESS)
                 { 
                     MessageBox.Show(LocalizedStrings.BackupEnd, "SaveFinished",

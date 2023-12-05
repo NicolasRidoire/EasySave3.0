@@ -193,7 +193,6 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
                 process.StartInfo.Arguments = file.FullName + " " + Path.Combine(destination, file.Name);
                 process.StartInfo.CreateNoWindow = true;
                 process.Start();
-                process.WaitForExit();
             } else
             {
                 file.CopyTo(Path.Combine(destination, file.Name), true);
