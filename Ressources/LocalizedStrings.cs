@@ -29,6 +29,7 @@ namespace PROGRAMMATION_SYST_ME.Ressources
         public static string ButValidate => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "ButValidate");
         public static string BackupEnd => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "BackupEnd");
         public static string BackupError => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "BackupError");
+        public static string Crypt => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "Crypt");
 
 
 

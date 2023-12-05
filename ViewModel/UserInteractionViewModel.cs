@@ -4,6 +4,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using PROGRAMMATION_SYST_ME;
 using System.Diagnostics;
+using System;
 
 
 namespace PROGRAMMATION_SYST_ME.ViewModel
@@ -12,6 +13,7 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
     { 
         public List<BackupJobDataModel> BackupJobsData { set; get; } = new List<BackupJobDataModel>();
         public BackupJobModel BackupJobs { set; get; }
+        public bool? IsCrypt {  set; get; }
         public List<RealTimeDataModel> RealTimeData { set; get; } = new List<RealTimeDataModel>();
         public RealTimeModel RealTime { set; get; } = new RealTimeModel();
         public LogModel LogFile { set; get; } = new LogModel();
@@ -182,7 +184,20 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
         /// <param name="destination">destination directory</param>
         private void CopyFile(FileInfo file, string destination)
         {
-            file.CopyTo(Path.Combine(destination, file.Name), true);
+            if (IsCrypt == true)
+            {
+                Process process = new Process();
+                process.StartInfo.UseShellExecute = true;
+                process.StartInfo.FileName = "Cryptosoft.exe";
+                process.StartInfo.WorkingDirectory = Path.Combine(Environment.CurrentDirectory, "Cryptosoft");
+                process.StartInfo.Arguments = file.FullName + " " + Path.Combine(destination, file.Name);
+                process.StartInfo.CreateNoWindow = true;
+                process.Start();
+                process.WaitForExit();
+            } else
+            {
+                file.CopyTo(Path.Combine(destination, file.Name), true);
+            }
             NbFilesCopied++;
             RealTimeData[indRTime].NbFilesLeftToDo = NbFilesCopied - RealTimeData[indRTime].TotalFilesToCopy;
             RealTimeData[indRTime].Progression = NbFilesCopied / RealTimeData[indRTime].TotalFilesToCopy;

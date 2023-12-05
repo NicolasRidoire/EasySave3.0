@@ -184,8 +184,10 @@ namespace PROGRAMMATION_SYST_ME.View
                 {
                     jobsToExec.Add((item.ToString()[0] - '0') - 1);
                 }
+                userInteract.IsCrypt = isCrypt.IsChecked;
                 iconLoad.Visibility = Visibility.Visible;
                 UpdateLayout();
+                Thread.Sleep(500);
                 // Used to wait for iconLoad to show
                 Dispatcher.Invoke(() => { error = userInteract.ExecuteJob(jobsToExec); }, DispatcherPriority.ContextIdle);
                 if (error == errorCode.SUCCESS)

@@ -61,11 +61,13 @@
                     <Run Text="{x:Static local:LocalizedStrings.BackupInformation}"/>
                 </TextBlock>
             </Viewbox>
+            <CheckBox x:Name="isCrypt" Content="{x:Static local:LocalizedStrings.Crypt}" FontWeight="Bold" FontSize="16" Grid.Column="2" HorizontalAlignment="Left" Margin="659,7,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Height="29" Width="260" Foreground="White" IsChecked="False"/>
 
         </Grid>
 
         <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" Background="#FFDAAB3A" Margin="0,-30,20,0" Width="236" Grid.ColumnSpan="2">
             <StackPanel Orientation="Horizontal" Margin="0, 15, 0, 0">
+
                 <TextBlock x:Name="language" Height="36" Width="140" FontWeight="Bold">
                 <Run Text="{x:Static local:LocalizedStrings.Language}"/>
                 <Run Language="fr-fr" Text=" :"/>
@@ -87,7 +89,7 @@
         </UniformGrid>
         <ListBox x:Name="BackupList" Grid.ColumnSpan="5" Grid.Row="1" Margin="88,131,69,100" SelectionMode="Multiple" BorderBrush="{x:Null}" FontSize="22">
         </ListBox>
-    
+
         <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5" VerticalAlignment="Center">
             <fa:ImageAwesome x:Name="iconLoad" HorizontalAlignment="Center" VerticalAlignment="Center" Icon="CircleOutlineNotch" Spin="True" SpinDuration="4" Width="100"/>
         </StackPanel>
