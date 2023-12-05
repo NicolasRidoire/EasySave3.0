@@ -16,22 +16,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Cryptosoft\Cryptosoft.deps.json">
+    <None Update="Cryptosoft.deps.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Cryptosoft\Cryptosoft.dll">
+    <None Update="Cryptosoft.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Cryptosoft\Cryptosoft.exe">
+    <None Update="Cryptosoft.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Cryptosoft\Cryptosoft.pdb">
+    <None Update="Cryptosoft.pdb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Cryptosoft\Cryptosoft.runtimeconfig.json">
+    <None Update="Cryptosoft.runtimeconfig.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Cryptosoft\Param.json">
+    <None Update="Param.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="SaveJobsConfig.xml">

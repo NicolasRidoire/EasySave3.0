@@ -42,6 +42,12 @@ namespace PROGRAMMATION_SYST_ME.View
             BoxDest.Text = Dest;
             ComboType.SelectedIndex = Type;
         }
+        public bool IsInputValid()
+        {
+            bool isValid = true;
+            if (BoxName.Text == "" || BoxSource.Text == "" || BoxDest.Text == "") { isValid = false; }
+            return isValid;
+        }
         private void ButtonSource_Click(object sender, RoutedEventArgs e)
         {
             var folderDialog = new OpenFolderDialog
@@ -73,26 +79,29 @@ namespace PROGRAMMATION_SYST_ME.View
 
         private void ButtonValidate_Click(object sender, RoutedEventArgs e)
         {
-            if (IsAdd)
+            if (IsInputValid())
             {
-                handleWin.BackupList.Items.Add("");
-                handleWin.userInteract.CreateJob(
-                    BoxName.Text,
-                    BoxSource.Text,
-                    BoxDest.Text,
-                    ComboType.SelectedIndex);
+                if (IsAdd)
+                {
+                    handleWin.BackupList.Items.Add("");
+                    handleWin.userInteract.CreateJob(
+                        BoxName.Text,
+                        BoxSource.Text,
+                        BoxDest.Text,
+                        ComboType.SelectedIndex);
+                }
+                else
+                {
+                    handleWin.userInteract.UpdateJob(
+                        Id,
+                        BoxName.Text,
+                        BoxSource.Text,
+                        BoxDest.Text,
+                        ComboType.SelectedIndex);
+                }
+                handleWin.UpdateUI();
+                Close();
             }
-            else
-            {
-                handleWin.userInteract.UpdateJob(
-                    Id,
-                    BoxName.Text,
-                    BoxSource.Text,
-                    BoxDest.Text,
-                    ComboType.SelectedIndex);
-            }
-            handleWin.UpdateUI();
-            Close();
         }
 
        

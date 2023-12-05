@@ -187,9 +187,8 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
             if (IsCrypt == true)
             {
                 Process process = new Process();
-                process.StartInfo.UseShellExecute = true;
+                process.StartInfo.UseShellExecute = false;
                 process.StartInfo.FileName = "Cryptosoft.exe";
-                process.StartInfo.WorkingDirectory = Path.Combine(Environment.CurrentDirectory, "Cryptosoft");
                 process.StartInfo.Arguments = file.FullName + " " + Path.Combine(destination, file.Name);
                 process.StartInfo.CreateNoWindow = true;
                 process.Start();
