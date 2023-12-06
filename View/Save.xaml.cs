@@ -21,6 +21,7 @@ namespace PROGRAMMATION_SYST_ME.View
     /// </summary>
     public partial class Save : Window
     {
+        // JB: Ajouter un "_" pour les variables privées
         private readonly MainWindow Mhandle;
         private readonly List<int> jobs;
         public Save(MainWindow handleMain, List<int> jobsToExec)

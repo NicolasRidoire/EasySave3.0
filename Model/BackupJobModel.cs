@@ -11,6 +11,11 @@ namespace PROGRAMMATION_SYST_ME.Model
     /// </summary>
     public class BackupJobModel
     {
+        // JB: On a plusieurs responsabilités ici:
+        // 1) Le stockage des données au format XML
+        // 2) La lecture des données au format XML
+        // 3) La lecture et la mise à jour du modèle avec les propriétés
+        // On pourrait avoir une classe XmlService qui contiendrait le traitement des données XML pour alléger le modèle
         public XmlDocument Xml { set; get; } = new XmlDocument();
         private readonly string xmlPath;
         public BackupJobModel(List<BackupJobDataModel> jobList)
@@ -104,6 +109,7 @@ namespace PROGRAMMATION_SYST_ME.Model
         }
 
     }
+    // JB: C'est mieux d'avoir une classe par fichier 
     public class BackupJobDataModel
     {
         public int Id {  get; set; }

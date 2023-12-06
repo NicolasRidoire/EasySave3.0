@@ -11,6 +11,7 @@ namespace PROGRAMMATION_SYST_ME.Model
 {
     public class RealTimeModel
     {
+        // JB: Même remarque que la classe BackupJobModel
         private string realTimeFile;
         public string ExtRealTime { get; set; }
         public XmlDocument Xml { set; get; } = new XmlDocument();
