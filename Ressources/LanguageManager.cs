@@ -7,6 +7,7 @@ using System.Windows;
 
 public static class LanguageManager
 {
+    // JB: J'aime bien cette façon de gérer les traductions
     private static Dictionary<string, Dictionary<string, string>> languages = new Dictionary<string, Dictionary<string, string>>();
 
     static LanguageManager()

@@ -12,13 +12,16 @@ namespace PROGRAMMATION_SYST_ME.View
     /// </summary>
     public partial class UpdateWorkJobView : Window
     {
+        // Renommer la variable
         private readonly MainWindow handleWin;
+        // JB: On peut avoir une ViewModel pour UpdateWorkJobView => UpdateWorkJobViewModel avec les propriétés
         public int Id { get; set; }
         public string SaveName { get; set; }
         public string Source { get; set; }
         public string Dest { get; set; }
         public int Type { get; set; }
         public bool IsAdd { get; set; }
+
         public UpdateWorkJobView(MainWindow handleWin)
         {
             this.handleWin = handleWin;
@@ -36,6 +39,7 @@ namespace PROGRAMMATION_SYST_ME.View
         }
         public void UpdateUI()
         {
+            // JB: Renommer les TextBox => IdTextBox, NameTextBox etc..
             BoxId.Text = (Id + 1).ToString();
             BoxName.Text = SaveName;
             BoxSource.Text = Source;
@@ -49,6 +53,7 @@ namespace PROGRAMMATION_SYST_ME.View
                 Title = "Select Source Folder"
             };
 
+            // JB: Privilégier "is" au lieu de "==" car "==" peut-être surchargé (On peut définir un autre comportement)
             if (folderDialog.ShowDialog() == true)
             {
                 BoxSource.Text = folderDialog.FolderName;

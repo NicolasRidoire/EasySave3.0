@@ -10,6 +10,7 @@ namespace PROGRAMMATION_SYST_ME.Model
     /// </summary>
     public class LogModel
     {
+        // JB: Même remarque que la classe BackupJobModel
         public XmlDocument Xml { set; get; } = new XmlDocument();
         public XmlDocument logXml { set; get; } = new XmlDocument();
         private string logFolder;
