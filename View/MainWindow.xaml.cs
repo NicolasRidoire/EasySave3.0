@@ -13,7 +13,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows.Threading;
 
-public enum errorCode
+public enum ErrorCode
 {
     SUCCESS = 0, // Allow code to continue
     NORMAL_EXIT = 1, // Normal exit code
@@ -26,7 +26,7 @@ namespace PROGRAMMATION_SYST_ME.View
 {
     public partial class MainWindow : Window
     {
-        public errorCode error { set; get; }
+        public ErrorCode Error { set; get; }
         public readonly UserInteractionViewModel userInteract = new();
         private double _infoSaveWidth;
         private UpdateWorkJobView updateWind;
@@ -149,7 +149,7 @@ namespace PROGRAMMATION_SYST_ME.View
                         {
                             index--;
                         }
-                        error = userInteract.DeleteJobVM(index);
+                        Error = userInteract.DeleteJobVM(index);
                         BackupList.Items.RemoveAt(index);
                     }
                 }
@@ -187,18 +187,18 @@ namespace PROGRAMMATION_SYST_ME.View
                 userInteract.IsCrypt = isCrypt.IsChecked;
                 iconLoad.Visibility = Visibility.Visible;
                 UpdateLayout();
-                Thread.Sleep(500);
+                Thread.Sleep(1000);
                 // Used to wait for iconLoad to show
-                Dispatcher.Invoke(() => { error = userInteract.ExecuteJob(jobsToExec); }, DispatcherPriority.ContextIdle);
-                while (Process.GetProcessesByName("Cryptosoft").Length > 0);
-                if (error == errorCode.SUCCESS)
+                Dispatcher.Invoke(() => { Error = userInteract.ExecuteJob(jobsToExec); }, DispatcherPriority.ContextIdle);
+                while (Process.GetProcessesByName("Cryptosoft").Length > 0) { Thread.Sleep(100); };
+                if (Error == ErrorCode.SUCCESS)
                 { 
                     MessageBox.Show(LocalizedStrings.BackupEnd, "SaveFinished",
-                                MessageBoxButton.OK);
+                                MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly);
                 } else
                 {
-                    MessageBox.Show(LocalizedStrings.BackupError + error, "BackupProblem",
-                                MessageBoxButton.YesNo);
+                    MessageBox.Show(LocalizedStrings.BackupError + Error, "BackupProblem",
+                                MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly);
                 }
                 iconLoad.Visibility = Visibility.Hidden;
             }

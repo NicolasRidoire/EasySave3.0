@@ -58,7 +58,7 @@ namespace PROGRAMMATION_SYST_ME.Model
                 var i = 0;
                 foreach (RealTimeDataModel data in RealTime)
                 {
-                    var job = CreateXmlElement(newXml, root, "job" + i, "");
+                    var job = CreateXmlElement(newXml, root, "job", "");
                     CreateXmlElement(newXml, job, "id", data.SaveData.Id.ToString());
                     CreateXmlElement(newXml, job, "name", data.SaveData.Name);
                     CreateXmlElement(newXml, job, "source", data.SaveData.Source);
