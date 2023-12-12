@@ -46,7 +46,7 @@
                 <ColumnDefinition Width="0"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock x:Name="description" FontWeight="Bold" FontSize="16" Grid.ColumnSpan="3" Margin="103,10,296,422" Foreground="White"><Run Text="{x:Static local:LocalizedStrings.Description}"/></TextBlock>
+            <TextBlock x:Name="DescriptionTextBlock" FontWeight="Bold" FontSize="16" Grid.ColumnSpan="3" Margin="103,10,296,422" Foreground="White"><Run Text="{x:Static local:LocalizedStrings.Description}"/></TextBlock>
 
             <Rectangle x:Name="descriptions" Grid.Column="2" Margin="103,49,56,87" Stroke="Black" RadiusX="17.288" RadiusY="17.288">
                 <Rectangle.Fill>
@@ -57,7 +57,7 @@
                 </Rectangle.Fill>
             </Rectangle>
             <Viewbox Grid.Column="2" Grid.ColumnSpan="2" Margin="112,60,80,0" HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="Uniform">
-                <TextBlock x:Name="info_save" TextWrapping="Wrap" Foreground="#FFEDEDED" FontWeight="Bold" FontSize="14" Width="369" Margin="5,0,0,0">
+                <TextBlock x:Name="InfoSaveTextBlock" TextWrapping="Wrap" Foreground="#FFEDEDED" FontWeight="Bold" FontSize="14" Width="369" Margin="5,0,0,0">
                     <Run Text="{x:Static local:LocalizedStrings.BackupInformation}"/>
                 </TextBlock>
             </Viewbox>
@@ -67,8 +67,7 @@
 
         <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" Background="#FFDAAB3A" Margin="0,-30,20,0" Width="236" Grid.ColumnSpan="2">
             <StackPanel Orientation="Horizontal" Margin="0, 15, 0, 0">
-
-                <TextBlock x:Name="language" Height="36" Width="140" FontWeight="Bold">
+                <TextBlock x:Name="LanguageTextBlock" Height="36" Width="140" FontWeight="Bold">
                 <Run Text="{x:Static local:LocalizedStrings.Language}"/>
                 <Run Language="fr-fr" Text=" :"/>
                 </TextBlock>
@@ -82,10 +81,10 @@
             </StackPanel>
         </StackPanel>
         <UniformGrid x:Name="buttonsUniformGrid" Grid.Row="1" Columns="4" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,22" Grid.ColumnSpan="5" Height="30" Width="551">
-            <Button x:Name="create" Content="{x:Static local:LocalizedStrings.Create}" Width="100" Background="Black" BorderBrush="White" Foreground="White" FontWeight="Bold" FontStyle="Normal" ClickMode="Press" Cursor="Hand" Click="Create_Click"/>
-            <Button x:Name="delete" Content="{x:Static local:LocalizedStrings.Delete}" Width="100" Background="Black" BorderBrush="White" Foreground="White" FontWeight="Bold" Cursor="Hand" Click="Delete_Click"/>
-            <Button x:Name="update" Content="{x:Static local:LocalizedStrings.Update}" Width="100" Foreground="White" BorderBrush="#FFF7F7F7" Background="#FF080808" FontWeight="Bold" Cursor="Hand" Click="Update_Click"/>
-            <Button x:Name="Execut" Content="{x:Static local:LocalizedStrings.Execut}" Width="100" Background="Black" Foreground="White" FontWeight="Bold" BorderBrush="White" Margin="39,0,-1,0" Cursor="Hand" Click="Execut_Click"/>
+            <Button x:Name="CreateButton" Content="{x:Static local:LocalizedStrings.Create}" Width="100" Background="Black" BorderBrush="White" Foreground="White" FontWeight="Bold" FontStyle="Normal" ClickMode="Press" Cursor="Hand" Click="Create_Click"/>
+            <Button x:Name="DeleteButton" Content="{x:Static local:LocalizedStrings.Delete}" Width="100" Background="Black" BorderBrush="White" Foreground="White" FontWeight="Bold" Cursor="Hand" Click="Delete_Click"/>
+            <Button x:Name="UpdateButton" Content="{x:Static local:LocalizedStrings.Update}" Width="100" Foreground="White" BorderBrush="#FFF7F7F7" Background="#FF080808" FontWeight="Bold" Cursor="Hand" Click="Update_Click"/>
+            <Button x:Name="ExecuteButton" Content="{x:Static local:LocalizedStrings.Execut}" Width="100" Background="Black" Foreground="White" FontWeight="Bold" BorderBrush="White" Margin="39,0,-1,0" Cursor="Hand" Click="Execut_Click"/>
         </UniformGrid>
         <ListBox x:Name="BackupList" Grid.ColumnSpan="5" Grid.Row="1" Margin="88,131,69,100" SelectionMode="Multiple" BorderBrush="{x:Null}" FontSize="22">
         </ListBox>

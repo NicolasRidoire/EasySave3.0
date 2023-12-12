@@ -10,16 +10,11 @@ namespace PROGRAMMATION_SYST_ME.View
     /// <summary>
     /// Interaction logic for UpdateWorkJobView.xaml
     /// </summary>
-    public partial class UpdateWorkJobView : Window
+    public partial class UpdateWorkJobWindow : Window
     {
         private readonly MainWindow handleWin;
-        public int Id { get; set; }
-        public string SaveName { get; set; }
-        public string Source { get; set; }
-        public string Dest { get; set; }
-        public int Type { get; set; }
-        public bool IsAdd { get; set; }
-        public UpdateWorkJobView(MainWindow handleWin)
+        public UpdateWorkJobViewModel ViewModel { get; set; } = new UpdateWorkJobViewModel();
+        public UpdateWorkJobWindow(MainWindow handleWin)
         {
             this.handleWin = handleWin;
             InitializeComponent();
@@ -36,11 +31,11 @@ namespace PROGRAMMATION_SYST_ME.View
         }
         public void UpdateUI()
         {
-            BoxId.Text = (Id + 1).ToString();
-            BoxName.Text = SaveName;
-            BoxSource.Text = Source;
-            BoxDest.Text = Dest;
-            ComboType.SelectedIndex = Type;
+            IdTextBox.Text = (ViewModel.Id + 1).ToString();
+            NameTextBox.Text = ViewModel.SaveName;
+            SourceTextBox.Text = ViewModel.Source;
+            DestTextBox.Text = ViewModel.Dest;
+            TypeComboBox.SelectedIndex = ViewModel.Type;
         }
         public bool IsInputValid()
         {
@@ -55,9 +50,9 @@ namespace PROGRAMMATION_SYST_ME.View
                 Title = "Select Source Folder"
             };
 
-            if (folderDialog.ShowDialog() == true)
+            if (folderDialog.ShowDialog() is true)
             {
-                BoxSource.Text = folderDialog.FolderName;
+                SourceTextBox.Text = folderDialog.FolderName;
             }
         }
         private void ButtonDest_Click(object sender, RoutedEventArgs e)
@@ -69,7 +64,7 @@ namespace PROGRAMMATION_SYST_ME.View
 
             if (folderDialog.ShowDialog() == true)
             {
-                BoxDest.Text = folderDialog.FolderName;
+                DestTextBox.Text = folderDialog.FolderName;
             }
         }
         private void ButtonCancel_Click(object sender, RoutedEventArgs e)
@@ -79,25 +74,24 @@ namespace PROGRAMMATION_SYST_ME.View
 
         private void ButtonValidate_Click(object sender, RoutedEventArgs e)
         {
-            if (IsInputValid())
-            {
-                if (IsAdd)
+            if (IsInputValid()){
+                if (ViewModel.IsAdd)
                 {
                     handleWin.BackupList.Items.Add("");
                     handleWin.userInteract.CreateJob(
-                        BoxName.Text,
-                        BoxSource.Text,
-                        BoxDest.Text,
-                        ComboType.SelectedIndex);
+                        NameTextBox.Text,
+                        SourceTextBox.Text,
+                        DestTextBox.Text,
+                        TypeComboBox.SelectedIndex);
                 }
                 else
                 {
                     handleWin.userInteract.UpdateJob(
-                        Id,
-                        BoxName.Text,
-                        BoxSource.Text,
-                        BoxDest.Text,
-                        ComboType.SelectedIndex);
+                        ViewModel.Id,
+                        NameTextBox.Text,
+                        SourceTextBox.Text,
+                        DestTextBox.Text,
+                        TypeComboBox.SelectedIndex);
                 }
                 handleWin.UpdateUI();
                 Close();

@@ -21,12 +21,12 @@ namespace PROGRAMMATION_SYST_ME.View
     /// </summary>
     public partial class Save : Window
     {
-        private readonly MainWindow Mhandle;
+        private readonly MainWindow mhandle;
         private readonly List<int> jobs;
         public Save(MainWindow handleMain, List<int> jobsToExec)
         {
             this.jobs = jobsToExec;
-            this.Mhandle = handleMain;
+            this.mhandle = handleMain;
             InitializeComponent();
         }
         

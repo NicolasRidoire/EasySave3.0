@@ -11,7 +11,7 @@ namespace PROGRAMMATION_SYST_ME.Model
     public class LogModel
     {
         public XmlDocument Xml { set; get; } = new XmlDocument();
-        public XmlDocument logXml { set; get; } = new XmlDocument();
+        public XmlDocument LogXml { set; get; } = new XmlDocument();
         private string logFolder;
         private string logFile;
         private readonly string xmlPath;
@@ -57,41 +57,41 @@ namespace PROGRAMMATION_SYST_ME.Model
             {
                 try
                 {
-                    logXml.Load(logFile);
+                    LogXml.Load(logFile);
                 }
                 catch (Exception e)
                 {
-                    var createRoot = logXml.CreateElement("root");
-                    logXml.AppendChild(createRoot);
+                    var createRoot = LogXml.CreateElement("root");
+                    LogXml.AppendChild(createRoot);
                 }
-                var root = logXml.DocumentElement;
-                XmlElement log = logXml.CreateElement("log");
+                var root = LogXml.DocumentElement;
+                XmlElement log = LogXml.CreateElement("log");
                 root.AppendChild(log);
-                XmlElement id = logXml.CreateElement("id");
+                XmlElement id = LogXml.CreateElement("id");
                 id.InnerText = logData.Id.ToString();
                 log.AppendChild(id);
-                XmlElement name = logXml.CreateElement("name");
+                XmlElement name = LogXml.CreateElement("name");
                 name.InnerText = logData.Name;
                 log.AppendChild(name);
-                XmlElement source = logXml.CreateElement("source");
+                XmlElement source = LogXml.CreateElement("source");
                 source.InnerText = logData.Source;
                 log.AppendChild(source);
-                XmlElement destination = logXml.CreateElement("destination");
+                XmlElement destination = LogXml.CreateElement("destination");
                 destination.InnerText = logData.Destination;
                 log.AppendChild(destination);
-                XmlElement type = logXml.CreateElement("type");
+                XmlElement type = LogXml.CreateElement("type");
                 type.InnerText = logData.Type.ToString();
                 log.AppendChild(type);
-                XmlElement elapsedTimeElement = logXml.CreateElement("elapsedTime");
+                XmlElement elapsedTimeElement = LogXml.CreateElement("elapsedTime");
                 elapsedTimeElement.InnerText = elapsedTime.ToString();
                 log.AppendChild(elapsedTimeElement);
-                XmlElement saveSizeElement = logXml.CreateElement("saveSize");
+                XmlElement saveSizeElement = LogXml.CreateElement("saveSize");
                 saveSizeElement.InnerText = saveSize.ToString();
                 log.AppendChild(saveSizeElement);
-                XmlElement time = logXml.CreateElement("time");
+                XmlElement time = LogXml.CreateElement("time");
                 time.InnerText = DateTime.Now.ToString();
                 log.AppendChild(time);
-                logXml.Save(logFile);
+                LogXml.Save(logFile);
             }
             else if (ExtLog == "json")
             {
@@ -107,13 +107,4 @@ namespace PROGRAMMATION_SYST_ME.Model
             }
         }
     }
-    public class LogDataModel
-    {
-        public BackupJobDataModel LogData { get; set;}
-        public long ElapsedTime { get; set;}
-        public long SaveSize { get; set;}
-        public string Time { get; set;}
-    }
-
-
 }
