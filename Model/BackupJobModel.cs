@@ -107,15 +107,5 @@ namespace PROGRAMMATION_SYST_ME.Model
             saveJob.AppendChild(Xml.CreateElement("Type"));
             UpdateNode(jobList, saveJob, jobList.Count-1);
         }
-
-    }
-    // JB: C'est mieux d'avoir une classe par fichier 
-    public class BackupJobDataModel
-    {
-        public int Id {  get; set; }
-        public string Name { get; set; }
-        public string Source { get; set; }
-        public string Destination { get; set; }
-        public int Type { get; set; }// O is full backup and 1 is differential backup
     }
 }

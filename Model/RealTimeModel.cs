@@ -11,11 +11,10 @@ namespace PROGRAMMATION_SYST_ME.Model
 {
     public class RealTimeModel
     {
-        // JB: Même remarque que la classe BackupJobModel
         private string realTimeFile;
         public string ExtRealTime { get; set; }
         public XmlDocument Xml { set; get; } = new XmlDocument();
-        private string xmlPath;
+        private readonly string xmlPath;
         public RealTimeModel()
         {
             xmlPath = Path.Combine(Environment.CurrentDirectory, @"SaveJobsConfig.xml");
@@ -75,21 +74,12 @@ namespace PROGRAMMATION_SYST_ME.Model
                 newXml.Save(realTimeFile);
             }
         }
-        private XmlElement CreateXmlElement(XmlDocument xml, XmlElement father, string name, string data)
+        private static XmlElement CreateXmlElement(XmlDocument xml, XmlElement father, string name, string data)
         {
             XmlElement element = xml.CreateElement(name);
             element.InnerText = data;
             father.AppendChild(element);
             return element;
         }
-    }
-    public class RealTimeDataModel
-    {
-        public BackupJobDataModel SaveData { get; set; }
-        public string State { get; set; }
-        public long TotalFilesToCopy { get; set; }
-        public long TotalFilesSize { get; set; }
-        public long NbFilesLeftToDo { get; set; }
-        public double Progression { get; set; }
     }
 }

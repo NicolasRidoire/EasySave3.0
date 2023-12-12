@@ -5,21 +5,13 @@ using System.Text.RegularExpressions;
 using PROGRAMMATION_SYST_ME;
 using System.Diagnostics;
 using System.Threading.Tasks.Dataflow;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 namespace PROGRAMMATION_SYST_ME.ViewModel
 {
-    // JB: Pourquoi la ViewModel se nomme UserInteraction? Le nom de la ViewModel correspond au nom de la View
-    // Exemple: MainWindow => MainWindowViewModel
-    public class UserInteractionViewModel
+    public class MainWindowViewModel
     { 
-        public List<BackupJobDataModel> BackupJobsData { set; get; } = new List<BackupJobDataModel>();
-        public BackupJobModel BackupJobs { set; get; }
-        public List<RealTimeDataModel> RealTimeData { set; get; } = new List<RealTimeDataModel>();
-        public RealTimeModel RealTime { set; get; } = new RealTimeModel();
-        public LogModel LogFile { set; get; } = new LogModel();
-        //private readonly StatusView statusView = new StatusView();
-
         //JB: Les champs privés se trouvent toujours en début de classe pour la lisibilité du code
         // Voici un ordre qui est recommendé: 
         // 1) Champs privés
@@ -33,25 +25,24 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
         private int indRTime = 0;
         private delegate void CopyType(FileInfo file, string destination);
         CopyType delegCopy;
-        // JB: On peut utiliser un string readonly
-        private string businessSoft = "CalculatorApp";
-        public UserInteractionViewModel()
+        private readonly string businessSoft = "CalculatorApp";
+        public MainWindowViewModel()
         {
-            // JB: Pourquoi transmettre la propriété BackupJobsData dans
-            // le constructeur du modèle?
-            // On peut aussi avoir une propriété BackupJobsData à l'intérieur du modèle?
-            // De cette façon on pourrait utiliser uniquement BackupJobs.BackupJobsData ou BackupJobs.Data
             BackupJobs = new BackupJobModel(BackupJobsData);
             delegCopy = CopyFile;
         }
 
-        // JB: Le retour (bool) n'est pas utilisé? 
-        public bool ChangeExtensionLog(string extLog)
+        public List<BackupJobDataModel> BackupJobsData { set; get; } = new List<BackupJobDataModel>();
+        public BackupJobModel BackupJobs { set; get; }
+        public List<RealTimeDataModel> RealTimeData { set; get; } = new List<RealTimeDataModel>();
+        public RealTimeModel RealTime { set; get; } = new RealTimeModel();
+        public LogModel LogFile { set; get; } = new LogModel();
+
+        public void ChangeExtensionLog(string extLog)
         {
             BackupJobs.ChangeExtensionLog(extLog);
             LogFile.CreateLogFile();
             RealTime.CreateRealTimeFile();
-            return true;
         }
         public int CreateJob(string name, string source, string Destination, int type)
         {
@@ -69,19 +60,17 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
 
             return newJob.Id;
         }
-        public errorCode DeleteJobVM(int job)
+        public ErrorCode DeleteJobVM(int job)
         {
             BackupJobsData.RemoveAt(job);
             BackupJobs.DestroyNode(job);
             BackupJobs.SaveParam(BackupJobsData);
             BackupJobs.UpdateList(BackupJobsData);
 
-            return errorCode.SUCCESS;
+            return ErrorCode.SUCCESS;
         }
 
-        // JB: On a beaucoup de paramètres ici, on pourrait avoir une classe pour
-        // string name, string source, string dest, int type
-        public errorCode UpdateJob(int jobChoice, string name, string source, string dest, int type)
+        public ErrorCode UpdateJob(int jobChoice, string name, string source, string dest, int type)
         {   
             BackupJobsData[jobChoice].Name = name;
             BackupJobsData[jobChoice].Source = source;
@@ -90,63 +79,41 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
 
             BackupJobs.SaveParam(BackupJobsData);
 
-            return errorCode.SUCCESS;
+            return ErrorCode.SUCCESS;
         }
         /// <summary>
         /// Method to execute backup jobs
         /// </summary>
         /// <param name="selection">input user</param>
         /// <returns>error code BUSINESS_SOFT_LAUNCHED or INPUT_USER or SOURCE_ERROR or SUCCESS</returns>
-        public errorCode ExecuteJob(List<int> jobsToExec)
+        public ErrorCode ExecuteJob(List<int> jobsToExec)
         {
-            errorCode error = errorCode.SUCCESS;
+            ErrorCode error = ErrorCode.SUCCESS;
 
-            // JB: Pourquoi récupère-t-on les processus ici et dans MainWindow.xaml.cs?
             Process[] processes = Process.GetProcessesByName(businessSoft);
 
             if (processes.Length != 0)
             {
-                error = errorCode.BUSINESS_SOFT_LAUNCHED;
+                error = ErrorCode.BUSINESS_SOFT_LAUNCHED;
                 return error;
             }
 
             SetupRealTime(jobsToExec);
 
-            // JB: On a beaucoup de code dans cette méthode, on peut découper ça en plusieurs petites méthodes
             indRTime = 0;
             foreach (int i in jobsToExec)
             {
                 NbFilesCopied = 0;
-                if (error == errorCode.SUCCESS)
+                if (error == ErrorCode.SUCCESS)
                 {
                     RealTimeData[indRTime].State = "ACTIVE";
                     RealTime.WriteRealTimeFile(RealTimeData);
 
-                    //statusView.JobStart(BackupJobsData[i].Name);
                     var watch = System.Diagnostics.Stopwatch.StartNew();
                     totalSaveSize = 0;
-                    // JB: Méthode CopyFile
-                    if (BackupJobsData[i].Type == 0) // Full backup
-                    {
-                        delegCopy = CopyFile;
-                    }
-                    else // Differencial backup
-                    {
-                        delegCopy = CopyFileDiff;
-                    }
+                    GetCopyDeleg(i);
 
-                    // JB: Méthode CreateDirectory
-                    if (Directory.Exists(BackupJobsData[i].Source))
-                    {
-                        error = SaveDir(BackupJobsData[i].Source, BackupJobsData[i].Destination);
-                    }
-                    else if (File.Exists(BackupJobsData[i].Source)) // JB: La source correspond un à chemin de dossier non? 
-                    {
-                        delegCopy(new FileInfo(BackupJobsData[i].Source), BackupJobsData[i].Destination);
-                    }
-                    else
-                        error = errorCode.SOURCE_ERROR;
-
+                    error = CreateDir(i);
 
                     watch.Stop();
 
@@ -156,24 +123,49 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
                         totalSaveSize
                     );
 
-                    // JB: Méthode UpdateState?
-                    if (error == errorCode.SUCCESS)
-                    {
-                        //statusView.JobStop(BackupJobsData[i].Name, watch.ElapsedMilliseconds);
-                        RealTimeData[indRTime].State = "SUCCESSFUL";
-                    }
-                    else
-                        RealTimeData[indRTime].State = "ERROR";
-
-                    RealTime.WriteRealTimeFile(RealTimeData);
+                    UpdateState(error);
                 }
                 else
                     break;
                 indRTime++;
             }
-            // JB: On ne fait rien?
-            if (error == errorCode.SUCCESS) { }
-            //statusView.JobsComplete();
+            return error;
+        }
+        private void UpdateState(ErrorCode error)
+        {
+            if (error == ErrorCode.SUCCESS)
+            {
+                RealTimeData[indRTime].State = "SUCCESSFUL";
+            }
+            else
+                RealTimeData[indRTime].State = "ERROR";
+
+            RealTime.WriteRealTimeFile(RealTimeData);
+        }
+        private void GetCopyDeleg(int i)
+        {
+            if (BackupJobsData[i].Type == 0) // Full backup
+            {
+                delegCopy = CopyFile;
+            }
+            else // Differencial backup
+            {
+                delegCopy = CopyFileDiff;
+            }
+        }
+        private ErrorCode CreateDir(int i)
+        {
+            ErrorCode error = ErrorCode.SUCCESS;
+            if (Directory.Exists(BackupJobsData[i].Source))
+            {
+                error = SaveDir(BackupJobsData[i].Source, BackupJobsData[i].Destination);
+            }
+            else if (File.Exists(BackupJobsData[i].Source))
+            {
+                delegCopy(new FileInfo(BackupJobsData[i].Source), BackupJobsData[i].Destination);
+            }
+            else
+                error = ErrorCode.SOURCE_ERROR;
             return error;
         }
         /// <summary>
@@ -193,12 +185,12 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
         /// <param name="source">Source directory</param>
         /// <param name="destination">Destination directory</param>
         /// <returns>error code SUCCESS or SOURCE_ERROR</returns>
-        private errorCode SaveDir(string source, string destination)
+        private ErrorCode SaveDir(string source, string destination)
         {
             var dir = new DirectoryInfo(source);
 
             if (!dir.Exists)
-                return errorCode.SOURCE_ERROR;
+                return ErrorCode.SOURCE_ERROR;
 
             DirectoryInfo[] dirs = dir.GetDirectories();
 
@@ -207,8 +199,6 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
                 if (dirDest.Exists)
                     Directory.Delete(destination, true);
             Directory.CreateDirectory(destination);
-            // JB: Je ne suis pas sûr qu'on est un plus-value à utiliser un délégué ici
-            // mais peut-être qu'il y a une idée pour la suite?
             foreach (FileInfo file in dir.GetFiles())
             {
                 delegCopy(file, destination);
@@ -219,7 +209,7 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
                 SaveDir(subDir.FullName, Path.Combine(destination, subDir.Name));
             }
 
-            return errorCode.SUCCESS;
+            return ErrorCode.SUCCESS;
         }
         /// <summary>
         /// Copy a file while updating total copy info
