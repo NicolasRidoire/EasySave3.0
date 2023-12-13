@@ -40,7 +40,21 @@ namespace PROGRAMMATION_SYST_ME.View
         public bool IsInputValid()
         {
             bool isValid = true;
-            if (NameTextBox.Text == "" || SourceTextBox.Text == "" || DestTextBox.Text == "") { isValid = false; }
+            if (NameTextBox.Text == "")
+            {
+                isValid = false;
+                NameWrongLabel.Visibility = Visibility.Visible;
+            }
+            if (SourceTextBox.Text == "")
+            {
+                isValid = false;
+                SourceWrongLabel.Visibility = Visibility.Visible;
+            }
+            if (DestTextBox.Text == "") 
+            {
+                isValid = false;
+                DestWrongLabel.Visibility = Visibility.Visible;
+            }
             return isValid;
         }
         private void ButtonSource_Click(object sender, RoutedEventArgs e)
@@ -74,28 +88,40 @@ namespace PROGRAMMATION_SYST_ME.View
 
         private void ButtonValidate_Click(object sender, RoutedEventArgs e)
         {
-            if (IsInputValid()){
-                if (ViewModel.IsAdd)
-                {
-                    handleWin.BackupList.Items.Add("");
-                    handleWin.userInteract.CreateJob(
-                        NameTextBox.Text,
-                        SourceTextBox.Text,
-                        DestTextBox.Text,
-                        TypeComboBox.SelectedIndex);
-                }
-                else
-                {
-                    handleWin.userInteract.UpdateJob(
-                        ViewModel.Id,
-                        NameTextBox.Text,
-                        SourceTextBox.Text,
-                        DestTextBox.Text,
-                        TypeComboBox.SelectedIndex);
-                }
-                handleWin.UpdateUI();
-                Close();
+            if (!IsInputValid()){
+                return;
             }
+
+            foreach (var name in handleWin.userInteract.BackupJobsData)
+            {
+                if (name.Name == NameTextBox.Text)
+                {
+                    NameWrongLabel.Visibility = Visibility.Visible;
+                    NameAlreadyUsedLabel.Visibility = Visibility.Visible;
+                    return;
+                }
+            }
+
+            if (ViewModel.IsAdd)
+            {
+                handleWin.BackupList.Items.Add("");
+                handleWin.userInteract.CreateJob(
+                    NameTextBox.Text,
+                    SourceTextBox.Text,
+                    DestTextBox.Text,
+                    TypeComboBox.SelectedIndex);
+            }
+            else
+            {
+                handleWin.userInteract.UpdateJob(
+                    ViewModel.Id,
+                    NameTextBox.Text,
+                    SourceTextBox.Text,
+                    DestTextBox.Text,
+                    TypeComboBox.SelectedIndex);
+            }
+            handleWin.UpdateUI();
+            Close();
         }
 
        

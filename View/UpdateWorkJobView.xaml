@@ -34,14 +34,14 @@
         <TextBox x:Name="NameTextBox" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="1" HorizontalAlignment="Center" TextWrapping="NoWrap" VerticalAlignment="Center" Width="372" Height="30" FontSize="18" FontWeight="Bold"/>
         <Label x:Name="LabelName" HorizontalAlignment="Right" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" FontSize="18" FontWeight="Bold" Content="{x:Static local:LocalizedStrings.LabName}" Background="{x:Null}" Foreground="White"></Label>
 
-        <TextBox x:Name="SourceTextBox" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="2" HorizontalAlignment="Center" TextWrapping="NoWrap" VerticalAlignment="Center" Width="372" Height="30" FontSize="18" FontWeight="Bold"/>
-        <Button x:Name="ButtonSource" Grid.Column="3" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Click="ButtonSource_Click" Height="30" Width="52">
+        <TextBox x:Name="SourceTextBox" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="2" HorizontalAlignment="Center" TextWrapping="NoWrap" VerticalAlignment="Center" Width="372" Height="30" FontSize="18" FontWeight="Bold" IsReadOnly="True"/>
+        <Button x:Name="ButtonSource" Grid.Column="3" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Click="ButtonSource_Click" Height="30" Width="52" Margin="106,0,0,0">
             <fa:ImageAwesome HorizontalAlignment="Center" VerticalAlignment="Center" Icon="Folder"/>
         </Button>
         <Label x:Name="LabelSource" HorizontalAlignment="Right" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" FontSize="18" FontWeight="Bold" Content="{x:Static local:LocalizedStrings.LabSource}" Background="{x:Null}" Foreground="White"></Label>
 
-        <TextBox x:Name="DestTextBox" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="3" HorizontalAlignment="Center" TextWrapping="NoWrap" VerticalAlignment="Center" Width="372" Height="30" FontSize="18" FontWeight="Bold"/>
-        <Button x:Name="ButtonDest" Grid.Column="3" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Click="ButtonDest_Click" Height="30" Width="52">
+        <TextBox x:Name="DestTextBox" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="3" HorizontalAlignment="Center" TextWrapping="NoWrap" VerticalAlignment="Center" Width="372" Height="30" FontSize="18" FontWeight="Bold" IsReadOnly="True" />
+        <Button x:Name="ButtonDest" Grid.Column="3" Grid.Row="3" HorizontalAlignment="Left" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Click="ButtonDest_Click" Height="30" Width="52" Margin="106,0,0,0">
             <fa:ImageAwesome HorizontalAlignment="Center" VerticalAlignment="Center" Icon="Folder"/>
         </Button>
         <Label x:Name="LabelDest" HorizontalAlignment="Right" Grid.Column="0" Grid.Row="3" VerticalAlignment="Center" FontSize="18" FontWeight="Bold" Content="{x:Static local:LocalizedStrings.LabDest}" Background="{x:Null}" Foreground="White"></Label>
@@ -54,6 +54,11 @@
 
         <Button x:Name="ButtonCancel" Tag="0" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" Grid.Row="5" FontSize="18" FontWeight="Bold" Content="{x:Static local:LocalizedStrings.ButCancel}" Width="87" Click="ButtonCancel_Click" Background="Black" Foreground="White" BorderBrush="White"></Button>
         <Button x:Name="ButtonValidate" Tag="1" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="3" Grid.Row="5" FontSize="18" FontWeight="Bold" Content="{x:Static local:LocalizedStrings.ButValidate}" Width="87" Click="ButtonValidate_Click" BorderBrush="White" Foreground="White" Background="Black"></Button>
+        <Label x:Name="NameWrongLabel" Grid.Column="1" Content="*" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Foreground="Red" FontSize="22" Height="30" Grid.Row="1" Visibility="Hidden"/>
+        <Label x:Name="NameAlreadyUsedLabel" Grid.Column="4" Content="{x:Static local:LocalizedStrings.NameUsed}" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Foreground="Red" FontSize="18" Height="33" Grid.Row="1" Visibility="Hidden"/>
+        <Label x:Name="SourceWrongLabel" Grid.Column="1" Content="*" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Foreground="Red" FontSize="22" Height="30" Grid.Row="2" Visibility="Hidden"/>
+        <Label x:Name="DestWrongLabel" Grid.Column="1" Content="*" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Foreground="Red" FontSize="22" Height="30" Grid.Row="3" Visibility="Hidden"/>
+        <Label x:Name="TypeWrongLabel" Grid.Column="1" Content="*" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Foreground="Red" FontSize="22" Height="30" Grid.Row="4" Visibility="Hidden"/>
 
     </Grid>
 </Window>
