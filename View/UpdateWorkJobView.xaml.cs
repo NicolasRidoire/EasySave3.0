@@ -40,7 +40,7 @@ namespace PROGRAMMATION_SYST_ME.View
         public bool IsInputValid()
         {
             bool isValid = true;
-            if (BoxName.Text == "" || BoxSource.Text == "" || BoxDest.Text == "") { isValid = false; }
+            if (NameTextBox.Text == "" || SourceTextBox.Text == "" || DestTextBox.Text == "") { isValid = false; }
             return isValid;
         }
         private void ButtonSource_Click(object sender, RoutedEventArgs e)

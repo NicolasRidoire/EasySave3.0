@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 namespace PROGRAMMATION_SYST_ME.ViewModel
@@ -34,12 +35,13 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
             delegCopy = CopyFile;
             Threads = new List<Thread>();
         }
-
+        public List<Thread> Threads { set; get; }
         public List<BackupJobDataModel> BackupJobsData { set; get; } = new List<BackupJobDataModel>();
         public BackupJobModel BackupJobs { set; get; }
         public List<RealTimeDataModel> RealTimeData { set; get; } = new List<RealTimeDataModel>();
         public RealTimeModel RealTime { set; get; } = new RealTimeModel();
         public LogModel LogFile { set; get; } = new LogModel();
+        public bool? IsCrypt { set; get; }
 
         public void ChangeExtensionLog(string extLog)
         {
@@ -114,30 +116,11 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
                     //Watch is wrong cause of multithreading
                     var watch = System.Diagnostics.Stopwatch.StartNew();
                     totalSaveSize = 0;
-                    if (BackupJobsData[i].Type == 0) // Full backup
-                    {
-                        delegCopy = CopyFile;
-                    }
-                    else // Differencial backup
-                    {
-                        delegCopy = CopyFileDiff;
-                    }
-                    if (Directory.Exists(BackupJobsData[i].Source))
-                    {
-                        Thread task = new(() => SaveDir(BackupJobsData[i].Source, BackupJobsData[i].Destination, delegCopy));
-                        task.Name = i.ToString();
-                        task.Start();
-                        Threads.Add(task);
-                    }
-                    else if (File.Exists(BackupJobsData[i].Source))
-                    {
-                        Thread task = new(() => delegCopy(new FileInfo(BackupJobsData[i].Source), BackupJobsData[i].Destination));
-                        task.Name = i.ToString();
-                        task.Start();
-                        Threads.Add(task);
-                    }
-                    else
-                        error = ErrorCode.SOURCE_ERROR;
+
+                    GetCopyDeleg(i);
+
+                    error = CreateDir(i, indRTime);
+
                     watch.Stop();
 
                     LogFile.WriteLogSave(
@@ -165,13 +148,13 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
                     RealTimeData[j].State = "ERROR";
                 RealTime.WriteRealTimeFile(RealTimeData);
                 mut.ReleaseMutex();
-                j++;
             }
 
             return error;
         }
         private void UpdateState(ErrorCode error)
         {
+            mut.WaitOne();
             if (error == ErrorCode.SUCCESS)
             {
                 RealTimeData[indRTime].State = "SUCCESSFUL";
@@ -180,6 +163,7 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
                 RealTimeData[indRTime].State = "ERROR";
 
             RealTime.WriteRealTimeFile(RealTimeData);
+            mut.ReleaseMutex();
         }
         private void GetCopyDeleg(int i)
         {
@@ -192,20 +176,25 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
                 delegCopy = CopyFileDiff;
             }
         }
-        private ErrorCode CreateDir(int i)
+        private ErrorCode CreateDir(int i, int indRTime)
         {
-            ErrorCode error = ErrorCode.SUCCESS;
             if (Directory.Exists(BackupJobsData[i].Source))
             {
-                error = SaveDir(BackupJobsData[i].Source, BackupJobsData[i].Destination);
+                Thread task = new(() => SaveDir(BackupJobsData[i].Source, BackupJobsData[i].Destination, delegCopy));
+                task.Name = indRTime.ToString();
+                task.Start();
+                Threads.Add(task);
             }
             else if (File.Exists(BackupJobsData[i].Source))
             {
-                delegCopy(new FileInfo(BackupJobsData[i].Source), BackupJobsData[i].Destination);
+                Thread task = new(() => delegCopy(new FileInfo(BackupJobsData[i].Source), BackupJobsData[i].Destination));
+                task.Name = indRTime.ToString();
+                task.Start();
+                Threads.Add(task);
             }
             else
-                error = ErrorCode.SOURCE_ERROR;
-            return error;
+                return ErrorCode.SOURCE_ERROR;
+            return ErrorCode.SUCCESS;
         }
         /// <summary>
         /// Get the file size and length
@@ -266,7 +255,7 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
                 Process process = new Process();
                 process.StartInfo.UseShellExecute = false;
                 process.StartInfo.FileName = "Cryptosoft.exe";
-                process.StartInfo.Arguments = file.FullName + " " + Path.Combine(destination, file.Name);
+                process.StartInfo.Arguments = '"' + file.FullName + '"' + " " + '"' + Path.Combine(destination, file.Name) + '"';
                 process.StartInfo.CreateNoWindow = true;
                 process.StartInfo.RedirectStandardError = true;
                 process.Start();

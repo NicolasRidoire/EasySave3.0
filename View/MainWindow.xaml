@@ -61,7 +61,6 @@
                     <Run Text="{x:Static local:LocalizedStrings.BackupInformation}"/>
                 </TextBlock>
             </Viewbox>
-            <CheckBox x:Name="isCrypt" Content="{x:Static local:LocalizedStrings.Crypt}" FontWeight="Bold" FontSize="16" Grid.Column="2" HorizontalAlignment="Left" Margin="659,7,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Height="29" Width="260" Foreground="White" IsChecked="False"/>
 
         </Grid>
 
