@@ -171,7 +171,14 @@ namespace PROGRAMMATION_SYST_ME.View
                 return;
             }
 
-            //jb: on peut avoir une méthode privée pour les lignes 253 - 276
+            var msboxAnswer = MessageBox.Show(LocalizedStrings.Crypt, "IsSaveCrypted", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+            if (msboxAnswer == MessageBoxResult.Yes)
+                userInteract.IsCrypt = true;
+            else if (msboxAnswer == MessageBoxResult.No)
+                userInteract.IsCrypt = false;
+            else
+                return;
+
             List<int> jobsToExec = new();
             foreach (var item in BackupList.SelectedItems)
             {

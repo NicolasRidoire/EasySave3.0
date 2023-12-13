@@ -4,7 +4,9 @@ using System.IO;
 using System.Text.RegularExpressions;
 using PROGRAMMATION_SYST_ME;
 using System.Diagnostics;
-using System.Threading.Tasks.Dataflow;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
@@ -21,22 +23,25 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
         // 5) Méthodes privées
         private long totalSaveSize = 0;
         private long totalNbFile = 0;
-        private long NbFilesCopied = 0;
+        private List<long> NbFilesCopied = new();
         private int indRTime = 0;
         private delegate void CopyType(FileInfo file, string destination);
         CopyType delegCopy;
+        private Mutex mut = new();
         private readonly string businessSoft = "CalculatorApp";
         public MainWindowViewModel()
         {
             BackupJobs = new BackupJobModel(BackupJobsData);
             delegCopy = CopyFile;
+            Threads = new List<Thread>();
         }
-
+        public List<Thread> Threads { set; get; }
         public List<BackupJobDataModel> BackupJobsData { set; get; } = new List<BackupJobDataModel>();
         public BackupJobModel BackupJobs { set; get; }
         public List<RealTimeDataModel> RealTimeData { set; get; } = new List<RealTimeDataModel>();
         public RealTimeModel RealTime { set; get; } = new RealTimeModel();
         public LogModel LogFile { set; get; } = new LogModel();
+        public bool? IsCrypt { set; get; }
 
         public void ChangeExtensionLog(string extLog)
         {
@@ -78,7 +83,6 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
             BackupJobsData[jobChoice].Type = type;
 
             BackupJobs.SaveParam(BackupJobsData);
-
             return ErrorCode.SUCCESS;
         }
         /// <summary>
@@ -89,7 +93,6 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
         public ErrorCode ExecuteJob(List<int> jobsToExec)
         {
             ErrorCode error = ErrorCode.SUCCESS;
-
             Process[] processes = Process.GetProcessesByName(businessSoft);
 
             if (processes.Length != 0)
@@ -103,17 +106,20 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
             indRTime = 0;
             foreach (int i in jobsToExec)
             {
-                NbFilesCopied = 0;
+                NbFilesCopied.Add(0);
                 if (error == ErrorCode.SUCCESS)
                 {
+                    mut.WaitOne();
                     RealTimeData[indRTime].State = "ACTIVE";
                     RealTime.WriteRealTimeFile(RealTimeData);
-
+                    mut.ReleaseMutex();
+                    //Watch is wrong cause of multithreading
                     var watch = System.Diagnostics.Stopwatch.StartNew();
                     totalSaveSize = 0;
+
                     GetCopyDeleg(i);
 
-                    error = CreateDir(i);
+                    error = CreateDir(i, indRTime);
 
                     watch.Stop();
 
@@ -129,10 +135,26 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
                     break;
                 indRTime++;
             }
+            foreach (Thread t in Threads)
+            {
+                int j = int.Parse(t.Name);
+                t.Join();
+                mut.WaitOne();
+                if (error == ErrorCode.SUCCESS)
+                {
+                    RealTimeData[j].State = "SUCCESSFUL";
+                }
+                else
+                    RealTimeData[j].State = "ERROR";
+                RealTime.WriteRealTimeFile(RealTimeData);
+                mut.ReleaseMutex();
+            }
+
             return error;
         }
         private void UpdateState(ErrorCode error)
         {
+            mut.WaitOne();
             if (error == ErrorCode.SUCCESS)
             {
                 RealTimeData[indRTime].State = "SUCCESSFUL";
@@ -141,6 +163,7 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
                 RealTimeData[indRTime].State = "ERROR";
 
             RealTime.WriteRealTimeFile(RealTimeData);
+            mut.ReleaseMutex();
         }
         private void GetCopyDeleg(int i)
         {
@@ -153,20 +176,25 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
                 delegCopy = CopyFileDiff;
             }
         }
-        private ErrorCode CreateDir(int i)
+        private ErrorCode CreateDir(int i, int indRTime)
         {
-            ErrorCode error = ErrorCode.SUCCESS;
             if (Directory.Exists(BackupJobsData[i].Source))
             {
-                error = SaveDir(BackupJobsData[i].Source, BackupJobsData[i].Destination);
+                Thread task = new(() => SaveDir(BackupJobsData[i].Source, BackupJobsData[i].Destination, delegCopy));
+                task.Name = indRTime.ToString();
+                task.Start();
+                Threads.Add(task);
             }
             else if (File.Exists(BackupJobsData[i].Source))
             {
-                delegCopy(new FileInfo(BackupJobsData[i].Source), BackupJobsData[i].Destination);
+                Thread task = new(() => delegCopy(new FileInfo(BackupJobsData[i].Source), BackupJobsData[i].Destination));
+                task.Name = indRTime.ToString();
+                task.Start();
+                Threads.Add(task);
             }
             else
-                error = ErrorCode.SOURCE_ERROR;
-            return error;
+                return ErrorCode.SOURCE_ERROR;
+            return ErrorCode.SUCCESS;
         }
         /// <summary>
         /// Get the file size and length
@@ -185,30 +213,28 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
         /// <param name="source">Source directory</param>
         /// <param name="destination">Destination directory</param>
         /// <returns>error code SUCCESS or SOURCE_ERROR</returns>
-        private ErrorCode SaveDir(string source, string destination)
+        private ErrorCode SaveDir(string source, string destination, CopyType deleg)
         {
             var dir = new DirectoryInfo(source);
 
             if (!dir.Exists)
                 return ErrorCode.SOURCE_ERROR;
-
             DirectoryInfo[] dirs = dir.GetDirectories();
 
             var dirDest = new DirectoryInfo(destination);
-            if (delegCopy == CopyFile)
+            if (deleg == CopyFile)
                 if (dirDest.Exists)
                     Directory.Delete(destination, true);
             Directory.CreateDirectory(destination);
             foreach (FileInfo file in dir.GetFiles())
             {
-                delegCopy(file, destination);
+                deleg(file, destination);
             }
 
             foreach (DirectoryInfo subDir in dirs)
             {
-                SaveDir(subDir.FullName, Path.Combine(destination, subDir.Name));
+                SaveDir(subDir.FullName, Path.Combine(destination, subDir.Name), deleg);
             }
-
             return ErrorCode.SUCCESS;
         }
         /// <summary>
@@ -218,13 +244,35 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
         /// <param name="destination">destination directory</param>
         private void CopyFile(FileInfo file, string destination)
         {
-            file.CopyTo(Path.Combine(destination, file.Name), true);
+            Process[] processes = Process.GetProcessesByName(businessSoft);
+            while (processes.Length != 0)
+            {
+                processes = Process.GetProcessesByName(businessSoft);
+                Thread.Sleep(50);
+            }
+            if (IsCrypt == true)
+            {
+                Process process = new Process();
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.FileName = "Cryptosoft.exe";
+                process.StartInfo.Arguments = '"' + file.FullName + '"' + " " + '"' + Path.Combine(destination, file.Name) + '"';
+                process.StartInfo.CreateNoWindow = true;
+                process.StartInfo.RedirectStandardError = true;
+                process.Start();
+            }
+            else
+            {
+                file.CopyTo(Path.Combine(destination, file.Name), true);
+            }
+            mut.WaitOne();
 
-            NbFilesCopied++;
-
-            RealTimeData[indRTime].NbFilesLeftToDo = NbFilesCopied - RealTimeData[indRTime].TotalFilesToCopy;
-            RealTimeData[indRTime].Progression = NbFilesCopied / RealTimeData[indRTime].TotalFilesToCopy;
+            var ind = int.Parse(Thread.CurrentThread.Name);
+            NbFilesCopied[ind]++;
+            RealTimeData[ind].NbFilesLeftToDo = RealTimeData[ind].TotalFilesToCopy - NbFilesCopied[ind];
+            RealTimeData[ind].Progression = NbFilesCopied[ind] / RealTimeData[ind].TotalFilesToCopy;
             RealTime.WriteRealTimeFile(RealTimeData);
+
+            mut.ReleaseMutex();
         }
         /// <summary>
         /// Copy a file if a change occured while updating total copy info
@@ -261,9 +309,7 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
                     totalNbFile = 0;
                     totalSaveSize = 0;
                     delegCopy = GetDirectoryInfo;
-
-                    SaveDir(BackupJobsData[i].Source, BackupJobsData[i].Destination);
-
+                    SaveDir(BackupJobsData[i].Source, BackupJobsData[i].Destination, delegCopy);
                     RealTimeData[indRTime].TotalFilesSize = totalSaveSize;
                     RealTimeData[indRTime].TotalFilesToCopy = totalNbFile;
                 }

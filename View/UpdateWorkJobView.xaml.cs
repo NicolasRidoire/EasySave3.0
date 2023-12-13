@@ -37,6 +37,12 @@ namespace PROGRAMMATION_SYST_ME.View
             DestTextBox.Text = ViewModel.Dest;
             TypeComboBox.SelectedIndex = ViewModel.Type;
         }
+        public bool IsInputValid()
+        {
+            bool isValid = true;
+            if (NameTextBox.Text == "" || SourceTextBox.Text == "" || DestTextBox.Text == "") { isValid = false; }
+            return isValid;
+        }
         private void ButtonSource_Click(object sender, RoutedEventArgs e)
         {
             var folderDialog = new OpenFolderDialog
@@ -68,26 +74,28 @@ namespace PROGRAMMATION_SYST_ME.View
 
         private void ButtonValidate_Click(object sender, RoutedEventArgs e)
         {
-            if (ViewModel.IsAdd)
-            {
-                handleWin.BackupList.Items.Add("");
-                handleWin.userInteract.CreateJob(
-                    NameTextBox.Text,
-                    SourceTextBox.Text,
-                    DestTextBox.Text,
-                    TypeComboBox.SelectedIndex);
+            if (IsInputValid()){
+                if (ViewModel.IsAdd)
+                {
+                    handleWin.BackupList.Items.Add("");
+                    handleWin.userInteract.CreateJob(
+                        NameTextBox.Text,
+                        SourceTextBox.Text,
+                        DestTextBox.Text,
+                        TypeComboBox.SelectedIndex);
+                }
+                else
+                {
+                    handleWin.userInteract.UpdateJob(
+                        ViewModel.Id,
+                        NameTextBox.Text,
+                        SourceTextBox.Text,
+                        DestTextBox.Text,
+                        TypeComboBox.SelectedIndex);
+                }
+                handleWin.UpdateUI();
+                Close();
             }
-            else
-            {
-                handleWin.userInteract.UpdateJob(
-                    ViewModel.Id,
-                    NameTextBox.Text,
-                    SourceTextBox.Text,
-                    DestTextBox.Text,
-                    TypeComboBox.SelectedIndex);
-            }
-            handleWin.UpdateUI();
-            Close();
         }
 
        
