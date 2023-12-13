@@ -8,7 +8,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-
 namespace PROGRAMMATION_SYST_ME.ViewModel
 {
     public class MainWindowViewModel

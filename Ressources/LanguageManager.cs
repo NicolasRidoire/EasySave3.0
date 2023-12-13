@@ -37,7 +37,8 @@ public static class LanguageManager
             { "SaveInfo3", "Progression" },
             { "BackupEnd", "Backups ended without a problem" },
             { "BackupError", "Error : Backup ended with error code " },
-            { "Crypt", "Do you want to encrypt your backups ?" }
+            { "Crypt", "Do you want to encrypt your backups ?" },
+            { "NameUsed", "Already used" }
         };
 
         languages["fr-FR"] = new Dictionary<string, string>
@@ -65,7 +66,8 @@ public static class LanguageManager
             { "SaveInfo3", "Progression" },
             { "BackupEnd", "Les sauvegardes se sont déroulées sans problème"},
             { "BackupError", "Erreur : Sauvegarde terminée avec le code d'erreur "},
-            { "Crypt", "Voulez-vous chiffrer vos sauvegardes ?" }
+            { "Crypt", "Voulez-vous chiffrer vos sauvegardes ?" },
+            { "NameUsed", "Déjà utilisé" }
 
         };
     }
