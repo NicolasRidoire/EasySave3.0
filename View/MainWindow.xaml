@@ -88,8 +88,6 @@
         <ListBox x:Name="BackupList" Grid.ColumnSpan="5" Grid.Row="1" Margin="88,131,69,100" SelectionMode="Multiple" BorderBrush="{x:Null}" FontSize="22">
         </ListBox>
 
-        <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5" VerticalAlignment="Center">
-            <fa:ImageAwesome x:Name="iconLoad" HorizontalAlignment="Center" VerticalAlignment="Center" Icon="CircleOutlineNotch" Spin="True" SpinDuration="4" Width="100"/>
-        </StackPanel>
+        <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5" VerticalAlignment="Center"/>
     </Grid>
 </Window>

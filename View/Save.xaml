@@ -25,8 +25,7 @@
 
 
         <StackPanel Background="#FFDAAB3A" Grid.ColumnSpan="5">
-
-            <TextBlock x:Name="welcomeTextBlock"  HorizontalAlignment="Left" Height="36" Width="412" Text="{x:Static local:LocalizedStrings.WelcomeMessage}" FontWeight="Bold" FontSize="16"/>
+            <TextBlock x:Name="welcomeTextBlock" Height="59" Width="660" Text="{x:Static vm:LocalizedStrings.Message}" FontWeight="Bold" FontSize="30"/>
 
         </StackPanel>
 
@@ -42,8 +41,6 @@
                 <ColumnDefinition/>
                 <ColumnDefinition Width="0"/>
             </Grid.ColumnDefinitions>
-
-            <TextBlock x:Name="description" FontWeight="Bold" FontSize="16" Grid.ColumnSpan="3" Margin="103,10,296,422" Foreground="White"><Run Text="{x:Static local:LocalizedStrings.Description}"/></TextBlock>
 
             <Rectangle x:Name="descriptions" Grid.Column="2" Margin="103,49,56,87" Stroke="Black" RadiusX="18.1" RadiusY="18.1">
                 <Rectangle.Fill>
@@ -70,40 +67,7 @@
 
                     </GridView>
                 </ListView.View>
-
             </ListView>
-
-
-            <!--<Viewbox  Grid.ColumnSpan="3" Margin="112,60,80,0" HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="Uniform">
-                <TextBlock x:Name="infoLabel" Text="{x:Static local:LocalizedStrings.SaveInfo}" TextWrapping="Wrap" Foreground="#FFEDEDED" FontWeight="Bold" FontSize="14" Width="369" Margin="5,0,0,0"/>
-            </Viewbox>-->
-
-            <!--<Viewbox Grid.Column="2" Grid.ColumnSpan="2" Margin="112,60,80,0" HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="Uniform">-->
-            <!--<TextBlock x:Name="info_save" TextWrapping="Wrap" Foreground="#FFEDEDED" FontWeight="Bold" FontSize="14" Width="369" Margin="5,0,0,0">-->
-            <!--<Run Text="{x:Static local:LocalizedStrings.SaveInfo}"/>-->
-            <!--</TextBlock>-->
-            <!--</Viewbox> -->
-
-
         </Grid>
-
-        <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" Background="#FFDAAB3A" Margin="0,-30,20,0" Width="236" Grid.ColumnSpan="2">
-            <StackPanel Orientation="Horizontal" Margin="0, 15, 0, 0">
-                <TextBlock x:Name="language" Height="36" Width="140" FontWeight="Bold">
-            <Run Text="{x:Static local:LocalizedStrings.Language}"/>
-            <Run Language="fr-fr" Text=" :"/>
-                </TextBlock>
-                <RadioButton GroupName="Lang" x:Name="EN" Content="EN" Height="30" Width="53" FontWeight="Bold" Cursor="Hand" Tag="en-US" IsEnabled="False"/>
-                <RadioButton GroupName="Lang"  x:Name="FR" Content="FR" Height="32" Width="50" FontWeight="Bold" Cursor="Hand" Tag="fr-FR" IsEnabled="False"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" Margin="0, -5, 0, 0">
-                <Label x:Name="extension" Content="Log extension :" Height="36" Width="140" FontWeight="Bold" Grid.Column="3" Grid.ColumnSpan="2"/>
-                <RadioButton GroupName="ext" x:Name="json" Content="json" Height="30" Width="53" FontWeight="Bold" Cursor="Hand" Tag="json" Grid.Column="4" IsEnabled="False"/>
-                <RadioButton GroupName="ext"  x:Name="xml" Content="xml" Height="32" Width="50" FontWeight="Bold" Cursor="Hand" Tag="xml" Grid.Column="4" IsEnabled="False"/>
-            </StackPanel>
-        </StackPanel>
-
-
-
     </Grid>
 </Window>

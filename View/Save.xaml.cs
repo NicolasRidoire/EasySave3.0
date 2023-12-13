@@ -28,6 +28,7 @@ namespace PROGRAMMATION_SYST_ME.View
             this.jobs = jobsToExec;
             this.mhandle = handleMain;
             InitializeComponent();
+            Show();
         }
 
         private void GridViewColumnHeader_Click(object sender, RoutedEventArgs e)
