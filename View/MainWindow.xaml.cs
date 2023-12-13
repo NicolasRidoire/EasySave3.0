@@ -44,10 +44,6 @@ namespace PROGRAMMATION_SYST_ME.View
                 json.IsChecked = true;
             else
                 xml.IsChecked = true;
-
-            iconLoad.Visibility = Visibility.Hidden;
-
-            UpdateUI();
         }
 
         private void RadioButton_Checked(object sender, RoutedEventArgs e)
@@ -163,7 +159,6 @@ namespace PROGRAMMATION_SYST_ME.View
             SetBackupInfoForUpdateWin(id);
             updateWind.UpdateUI();
         }
-
         private void Execut_Click(object sender, RoutedEventArgs e)
         {
             if (BackupList.SelectedItems.Count <= 0)
@@ -185,30 +180,24 @@ namespace PROGRAMMATION_SYST_ME.View
                 jobsToExec.Add((item.ToString()[0] - '0') - 1);
             }
 
-            iconLoad.Visibility = Visibility.Visible;
-
-            UpdateLayout();
-
-            // Used to wait for iconLoad to show
             //thread et lancer la page
 
             Thread thread = new Thread (() => Dispatcher.Invoke(() => { Error = userInteract.ExecuteJob(jobsToExec); }, DispatcherPriority.ContextIdle));
             thread.Start();
             //instance de la classe qui contient la page
-            Save saveWin = new Save(this, jobsToExec);
+            var saveWin = new Save(this, jobsToExec);
             saveWin.Show();
-            if (Error == ErrorCode.SUCCESS)
-            {
-                MessageBox.Show(LocalizedStrings.BackupEnd, "SaveFinished",
-                            MessageBoxButton.OK);
-            }
-            else
-            {
-                MessageBox.Show(LocalizedStrings.BackupError + Error, "BackupProblem",
-                            MessageBoxButton.OK);
-            }
 
-            iconLoad.Visibility = Visibility.Hidden;
+            //if (Error == ErrorCode.SUCCESS)
+            //{
+            //    MessageBox.Show(LocalizedStrings.BackupEnd, "SaveFinished",
+            //                MessageBoxButton.OK);
+            //}
+            //else
+            //{
+            //    MessageBox.Show(LocalizedStrings.BackupError + Error, "BackupProblem",
+            //                MessageBoxButton.OK);
+            //}
         }
         private void RadioExt_Checked(object sender, RoutedEventArgs e)
         {
