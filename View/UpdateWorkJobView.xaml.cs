@@ -94,7 +94,16 @@ namespace PROGRAMMATION_SYST_ME.View
 
             foreach (var name in handleWin.userInteract.BackupJobsData)
             {
+                bool wrongInp = false;
                 if (name.Name == NameTextBox.Text)
+                {
+                    if (ViewModel.IsAdd)
+                        wrongInp = true;
+                    else
+                        if (NameTextBox.Text != handleWin.userInteract.BackupJobsData[int.Parse(IdTextBox.Text) - 1].Name)
+                            wrongInp = true;
+                }
+                if (wrongInp)
                 {
                     NameWrongLabel.Visibility = Visibility.Visible;
                     NameAlreadyUsedLabel.Visibility = Visibility.Visible;
