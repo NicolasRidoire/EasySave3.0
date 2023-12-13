@@ -10,6 +10,7 @@ namespace PROGRAMMATION_SYST_ME.Ressources
     public static class LocalizedStrings
     {
         public static string WelcomeMessage => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "WelcomeMessage");
+        public static string Message => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "Message");
         public static string BackupInformation => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "BackupInformation");
         public static string SaveInfo1 => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "SaveInfo1");
         public static string SaveInfo2 => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "SaveInfo2");
