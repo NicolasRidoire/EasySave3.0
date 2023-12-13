@@ -7,8 +7,6 @@ using System.Diagnostics;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
 
 namespace PROGRAMMATION_SYST_ME.ViewModel
 {
