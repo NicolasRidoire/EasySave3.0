@@ -190,7 +190,13 @@ namespace PROGRAMMATION_SYST_ME.View
             UpdateLayout();
 
             // Used to wait for iconLoad to show
-            Dispatcher.Invoke(() => { Error = userInteract.ExecuteJob(jobsToExec); }, DispatcherPriority.ContextIdle);
+            //thread et lancer la page
+
+            Thread thread = new Thread (() => Dispatcher.Invoke(() => { Error = userInteract.ExecuteJob(jobsToExec); }, DispatcherPriority.ContextIdle));
+            thread.Start();
+            //instance de la classe qui contient la page
+            Save saveWin = new Save(this, jobsToExec);
+            saveWin.Show();
             if (Error == ErrorCode.SUCCESS)
             {
                 MessageBox.Show(LocalizedStrings.BackupEnd, "SaveFinished",
