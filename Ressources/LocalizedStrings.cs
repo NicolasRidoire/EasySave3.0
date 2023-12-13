@@ -11,7 +11,9 @@ namespace PROGRAMMATION_SYST_ME.Ressources
     {
         public static string WelcomeMessage => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "WelcomeMessage");
         public static string BackupInformation => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "BackupInformation");
-        public static string SaveInfo => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "SaveInfo");
+        public static string SaveInfo1 => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "SaveInfo1");
+        public static string SaveInfo2 => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "SaveInfo2");
+        public static string SaveInfo3 => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "SaveInfo3");
         public static string Language => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "language");
         public static string Delete => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "Delete");
         public static string Create => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "create");

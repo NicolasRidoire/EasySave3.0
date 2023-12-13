@@ -53,11 +53,37 @@
                     </LinearGradientBrush>
                 </Rectangle.Fill>
             </Rectangle>
-            <Viewbox Grid.Column="2" Grid.ColumnSpan="2" Margin="112,60,80,0" HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="Uniform">
-                <TextBlock x:Name="info_save" TextWrapping="Wrap" Foreground="#FFEDEDED" FontWeight="Bold" FontSize="14" Width="369" Margin="5,0,0,0">
-                <Run Text="{x:Static local:LocalizedStrings.SaveInfo}"/>
-                </TextBlock>
-            </Viewbox>
+            <ListView Grid.Column="2" Margin="126,81,79,102"  Foreground="Black" BorderBrush="Black" OpacityMask="Black" RenderTransformOrigin="0.501,0.579" SelectionChanged="ListView_SelectionChanged_1" FontSize="20" FontWeight="Bold">
+                <ListView.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FF060505"/>
+                        <GradientStop Color="White" Offset="0.133"/>
+                        <GradientStop Color="#FF131212" Offset="0.117"/>
+                    </LinearGradientBrush>
+                </ListView.Background>
+                <!--ItemsSource=""-->
+                <ListView.View>
+                    <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Employee Information">
+                        <GridViewColumn Header= "{x:Static local:LocalizedStrings.SaveInfo1}" Width="250"/>
+                        <GridViewColumn Header="{x:Static local:LocalizedStrings.SaveInfo2}" Width="250" />
+                        <GridViewColumn Header="{x:Static local:LocalizedStrings.SaveInfo3}" Width="250" />
+
+                    </GridView>
+                </ListView.View>
+
+            </ListView>
+
+
+            <!--<Viewbox  Grid.ColumnSpan="3" Margin="112,60,80,0" HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="Uniform">
+                <TextBlock x:Name="infoLabel" Text="{x:Static local:LocalizedStrings.SaveInfo}" TextWrapping="Wrap" Foreground="#FFEDEDED" FontWeight="Bold" FontSize="14" Width="369" Margin="5,0,0,0"/>
+            </Viewbox>-->
+
+            <!--<Viewbox Grid.Column="2" Grid.ColumnSpan="2" Margin="112,60,80,0" HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="Uniform">-->
+            <!--<TextBlock x:Name="info_save" TextWrapping="Wrap" Foreground="#FFEDEDED" FontWeight="Bold" FontSize="14" Width="369" Margin="5,0,0,0">-->
+            <!--<Run Text="{x:Static local:LocalizedStrings.SaveInfo}"/>-->
+            <!--</TextBlock>-->
+            <!--</Viewbox> -->
+
 
         </Grid>
 
@@ -77,8 +103,7 @@
             </StackPanel>
         </StackPanel>
 
-        <UniformGrid x:Name="buttonsUniformGrid" Grid.Row="1" Columns="4" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,22" Grid.ColumnSpan="5" Height="30" Width="551"/>
-        <ListBox x:Name="SaveList" Grid.ColumnSpan="5" Grid.Row="1" Margin="88,131,69,100" SelectionMode="Multiple" BorderBrush="{x:Null}" FontSize="22">
-        </ListBox>
+
+
     </Grid>
 </Window>

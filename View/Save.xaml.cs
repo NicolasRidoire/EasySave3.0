@@ -30,6 +30,20 @@ namespace PROGRAMMATION_SYST_ME.View
             this.Mhandle = handleMain;
             InitializeComponent();
         }
-        
+
+        private void GridViewColumnHeader_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void ListView_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }
