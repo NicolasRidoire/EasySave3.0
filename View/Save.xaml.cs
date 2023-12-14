@@ -1,6 +1,8 @@
-﻿using System;
+﻿using PROGRAMMATION_SYST_ME.Ressources;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,7 +40,8 @@ namespace PROGRAMMATION_SYST_ME.View
                 {
                     Name = mhandle.userInteract.BackupJobsData[job].Name,
                     Progr = pro,
-                    ProgrStr = pro.ToString() + " %"
+                    ProgrStr = pro.ToString() + " %",
+                    Status = mhandle.userInteract.RealTimeData[i].State
                 });
                 i++;
             }
@@ -54,7 +57,8 @@ namespace PROGRAMMATION_SYST_ME.View
                         {
                             Name = mhandle.userInteract.BackupJobsData[job].Name,
                             Progr = pro,
-                            ProgrStr = pro.ToString() + " %"
+                            ProgrStr = pro.ToString() + " %",
+                            Status = mhandle.userInteract.RealTimeData[i].State
                         });
                         i++;
                     }
@@ -65,7 +69,6 @@ namespace PROGRAMMATION_SYST_ME.View
 
             Show();
         }
-
         private void GridViewColumnHeader_Click(object sender, RoutedEventArgs e)
         {
 
@@ -80,5 +83,6 @@ namespace PROGRAMMATION_SYST_ME.View
         public string Name { get; set; }
         public int Progr { get; set; }
         public string ProgrStr { get; set; }
+        public string Status { get; set; }
     }
 }
