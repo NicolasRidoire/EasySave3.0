@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PROGRAMMATION_SYST_ME.ViewModel
 {
@@ -86,6 +87,16 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
             BackupJobs.SaveParam(BackupJobsData);
             return ErrorCode.SUCCESS;
         }
+        private ErrorCode IsBusinessSoftLaunched()
+        {
+            Process[] processes = Process.GetProcessesByName(businessSoft);
+
+            if (processes.Length != 0)
+            {
+                return ErrorCode.BUSINESS_SOFT_LAUNCHED;
+            }
+            return ErrorCode.SUCCESS;
+        }
         /// <summary>
         /// Method to execute backup jobs
         /// </summary>
@@ -95,13 +106,9 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
         {
             IsSaving = true;
             ErrorCode error = ErrorCode.SUCCESS;
-            Process[] processes = Process.GetProcessesByName(businessSoft);
 
-            if (processes.Length != 0)
-            {
-                error = ErrorCode.BUSINESS_SOFT_LAUNCHED;
-                return error;
-            }
+            if (IsBusinessSoftLaunched() == ErrorCode.BUSINESS_SOFT_LAUNCHED)
+                return ErrorCode.BUSINESS_SOFT_LAUNCHED;
 
             SetupRealTime(jobsToExec);
 
@@ -237,12 +244,8 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
         /// <param name="destination">destination directory</param>
         private void CopyFile(FileInfo file, string destination)
         {
-            Process[] processes = Process.GetProcessesByName(businessSoft);
-            while (processes.Length != 0)
-            {
-                processes = Process.GetProcessesByName(businessSoft);
+            while (IsBusinessSoftLaunched() == ErrorCode.BUSINESS_SOFT_LAUNCHED)
                 Thread.Sleep(50);
-            }
             if (IsCrypt == true)
             {
                 Process process = new Process();
