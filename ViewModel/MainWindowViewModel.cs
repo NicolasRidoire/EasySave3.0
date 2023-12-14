@@ -25,7 +25,10 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
         private int indRTime = 0;
         private delegate void CopyType(FileInfo file, string destination);
         CopyType delegCopy;
-        private Mutex mut = new();
+        public Mutex Mut { set; get; } = new();
+        public bool IsSetup { set; get; } = false;
+        public bool IsSaving { set; get; } = false;
+
         private readonly string businessSoft = "CalculatorApp";
         public MainWindowViewModel()
         {
@@ -90,6 +93,7 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
         /// <returns>error code BUSINESS_SOFT_LAUNCHED or INPUT_USER or SOURCE_ERROR or SUCCESS</returns>
         public ErrorCode ExecuteJob(List<int> jobsToExec)
         {
+            IsSaving = true;
             ErrorCode error = ErrorCode.SUCCESS;
             Process[] processes = Process.GetProcessesByName(businessSoft);
 
@@ -104,13 +108,12 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
             indRTime = 0;
             foreach (int i in jobsToExec)
             {
-                NbFilesCopied.Add(0);
                 if (error == ErrorCode.SUCCESS)
                 {
-                    mut.WaitOne();
+                    Mut.WaitOne();
                     RealTimeData[indRTime].State = "ACTIVE";
                     RealTime.WriteRealTimeFile(RealTimeData);
-                    mut.ReleaseMutex();
+                    Mut.ReleaseMutex();
                     //Watch is wrong cause of multithreading
                     var watch = System.Diagnostics.Stopwatch.StartNew();
                     totalSaveSize = 0;
@@ -126,18 +129,23 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
                         watch.ElapsedMilliseconds,
                         totalSaveSize
                     );
-
-                    UpdateState(error);
                 }
                 else
                     break;
                 indRTime++;
             }
+            Process[] cryptProcesses;
+            do
+            {
+                cryptProcesses = Process.GetProcessesByName("Cryptosoft");
+                Thread.Sleep(50);
+            }
+            while (cryptProcesses.Length != 0);
             foreach (Thread t in Threads)
             {
                 int j = int.Parse(t.Name);
                 t.Join();
-                mut.WaitOne();
+                Mut.WaitOne();
                 if (error == ErrorCode.SUCCESS)
                 {
                     RealTimeData[j].State = "SUCCESSFUL";
@@ -145,23 +153,10 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
                 else
                     RealTimeData[j].State = "ERROR";
                 RealTime.WriteRealTimeFile(RealTimeData);
-                mut.ReleaseMutex();
+                Mut.ReleaseMutex();
             }
-
+            IsSaving = false;
             return error;
-        }
-        private void UpdateState(ErrorCode error)
-        {
-            mut.WaitOne();
-            if (error == ErrorCode.SUCCESS)
-            {
-                RealTimeData[indRTime].State = "SUCCESSFUL";
-            }
-            else
-                RealTimeData[indRTime].State = "ERROR";
-
-            RealTime.WriteRealTimeFile(RealTimeData);
-            mut.ReleaseMutex();
         }
         private void GetCopyDeleg(int i)
         {
@@ -262,15 +257,14 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
             {
                 file.CopyTo(Path.Combine(destination, file.Name), true);
             }
-            mut.WaitOne();
 
             var ind = int.Parse(Thread.CurrentThread.Name);
             NbFilesCopied[ind]++;
             RealTimeData[ind].NbFilesLeftToDo = RealTimeData[ind].TotalFilesToCopy - NbFilesCopied[ind];
-            RealTimeData[ind].Progression = NbFilesCopied[ind] / RealTimeData[ind].TotalFilesToCopy;
+            RealTimeData[ind].Progression = (double)NbFilesCopied[ind] / (double)RealTimeData[ind].TotalFilesToCopy * 100;
+            Mut.WaitOne();
             RealTime.WriteRealTimeFile(RealTimeData);
-
-            mut.ReleaseMutex();
+            Mut.ReleaseMutex();
         }
         /// <summary>
         /// Copy a file if a change occured while updating total copy info
@@ -294,14 +288,15 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
         private void SetupRealTime(List<int> jobsToExec)
         {
             RealTimeData.Clear();
+            NbFilesCopied.Clear();
             indRTime = 0;
 
             foreach (int i in jobsToExec)
             {
                 RealTimeData.Add(new RealTimeDataModel());
+                NbFilesCopied.Add(0);
                 RealTimeData[indRTime].SaveData = BackupJobsData[i];
                 RealTimeData[indRTime].State = "WAITING";
-
                 if (Directory.Exists(BackupJobsData[i].Source))
                 {
                     totalNbFile = 0;
@@ -319,6 +314,7 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
                 indRTime++;
             }
             RealTime.WriteRealTimeFile(RealTimeData);
+            IsSetup = true; 
         }
     }
 }
