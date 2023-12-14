@@ -7,7 +7,8 @@
         xmlns:vm="clr-namespace:PROGRAMMATION_SYST_ME.Ressources"
         mc:Ignorable="d"
         Title="Save" Height="450" Width="800" Background="#FFDAAB3A"
-        MinWidth="950" MinHeight="620">
+        MinWidth="950" MinHeight="620"
+        Closing="Window_Closing">
     <Grid Margin="2,34,0,22">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="223*"/>
@@ -50,7 +51,13 @@
                     </LinearGradientBrush>
                 </Rectangle.Fill>
             </Rectangle>
-            <ListView Grid.Column="2" Margin="126,81,79,102"  Foreground="Black" BorderBrush="Black" OpacityMask="Black" RenderTransformOrigin="0.501,0.579" SelectionChanged="ListView_SelectionChanged_1" FontSize="20" FontWeight="Bold">
+            <ListView x:Name="ProgressListView" Grid.Column="2" Margin="126,81,79,102"  Foreground="Black" BorderBrush="Black" OpacityMask="Black" RenderTransformOrigin="0.501,0.579" FontSize="20" FontWeight="Bold">
+                <ListView.ItemContainerStyle>
+                    <Style/>
+                </ListView.ItemContainerStyle>
+                <ListView.BindingGroup>
+                    <BindingGroup/>
+                </ListView.BindingGroup>
                 <ListView.Background>
                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                         <GradientStop Color="#FF060505"/>
@@ -61,9 +68,16 @@
                 <!--ItemsSource=""-->
                 <ListView.View>
                     <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Employee Information">
-                        <GridViewColumn Header= "{x:Static local:LocalizedStrings.SaveInfo1}" Width="250"/>
-                        <GridViewColumn Header="{x:Static local:LocalizedStrings.SaveInfo2}" Width="250" />
-                        <GridViewColumn Header="{x:Static local:LocalizedStrings.SaveInfo3}" Width="250" />
+                        <GridViewColumn Header= "{x:Static local:LocalizedStrings.SaveInfo1}" Width="250" DisplayMemberBinding="{Binding Name}"/>
+
+                        <GridViewColumn Header="{x:Static local:LocalizedStrings.SaveInfo2}" Width="250">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ProgressBar Maximum="100" Value="{Binding Progr}" Height="20" Width="225" HorizontalAlignment="Center" VerticalAlignment="Center"></ProgressBar>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="{x:Static local:LocalizedStrings.SaveInfo3}" Width="250" DisplayMemberBinding="{Binding ProgrStr}"/>
 
                     </GridView>
                 </ListView.View>
