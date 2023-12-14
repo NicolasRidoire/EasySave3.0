@@ -26,6 +26,7 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
         private int indRTime = 0;
         private delegate void CopyType(FileInfo file, string destination);
         CopyType delegCopy;
+        private List<Stopwatch> watch = new ();
         public Mutex Mut { set; get; } = new();
         public bool IsSetup { set; get; } = false;
         public bool IsSaving { set; get; } = false;
@@ -117,25 +118,17 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
             {
                 if (error == ErrorCode.SUCCESS)
                 {
-                    Mut.WaitOne();
                     RealTimeData[indRTime].State = "ACTIVE";
+                    Mut.WaitOne();
                     RealTime.WriteRealTimeFile(RealTimeData);
                     Mut.ReleaseMutex();
                     //Watch is wrong cause of multithreading
-                    var watch = System.Diagnostics.Stopwatch.StartNew();
-                    totalSaveSize = 0;
+                    watch.Add( new Stopwatch());
+                    watch[indRTime].Start();
 
                     GetCopyDeleg(i);
 
                     error = CreateDir(i, indRTime);
-
-                    watch.Stop();
-
-                    LogFile.WriteLogSave(
-                        BackupJobsData[i],
-                        watch.ElapsedMilliseconds,
-                        totalSaveSize
-                    );
                 }
                 else
                     break;
@@ -152,6 +145,7 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
             {
                 int j = int.Parse(t.Name);
                 t.Join();
+                watch[j].Stop();
                 Mut.WaitOne();
                 if (error == ErrorCode.SUCCESS)
                 {
@@ -161,6 +155,11 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
                     RealTimeData[j].State = "ERROR";
                 RealTime.WriteRealTimeFile(RealTimeData);
                 Mut.ReleaseMutex();
+                LogFile.WriteLogSave(
+                        BackupJobsData[jobsToExec[j]],
+                        watch[j].ElapsedMilliseconds,
+                        RealTimeData[j].TotalFilesSize
+                    );
             }
             IsSaving = false;
             return error;
