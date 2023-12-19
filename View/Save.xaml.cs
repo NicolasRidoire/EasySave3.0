@@ -31,6 +31,7 @@ namespace PROGRAMMATION_SYST_ME.View
             jobs = jobsToExec;
             mhandle = handleMain;
             InitializeComponent();
+            ProgressListView.Items.Clear();
             while (!mhandle.userInteract.IsSetup) { Thread.Sleep(100); }
             int i = 0;
             foreach (var job in jobs)
@@ -40,25 +41,37 @@ namespace PROGRAMMATION_SYST_ME.View
                 {
                     Name = mhandle.userInteract.BackupJobsData[job].Name,
                     Progr = pro,
-                    ProgrStr = pro.ToString() + " %"
+                    ProgrStr = pro.ToString() + " %",
+                    Status = mhandle.userInteract.RealTimeData[i].State
                 });
                 i++;
             }
             backThread = new Thread(() =>
             {
-                while (true)
+                bool end = false;
+                while (!end)
                 {
-                    int i = 0;
+                    int y = 0;
+                    bool canEnd = true;
                     foreach (var job in jobs)
                     {
-                        int pro = (int)(mhandle.userInteract.RealTimeData[i].Progression);
-                        this.Dispatcher.Invoke(() => ProgressListView.Items[i] = new Item
+                        int pro = (int)mhandle.userInteract.RealTimeData[y].Progression;
+                        if (pro == 100 && canEnd)
+                            end = true;
+                        else
+                        {
+                            end = false;
+                            canEnd = false;
+                        }
+
+                        this.Dispatcher.Invoke(() => ProgressListView.Items[y] = new Item
                         {
                             Name = mhandle.userInteract.BackupJobsData[job].Name,
                             Progr = pro,
-                            ProgrStr = pro.ToString() + " %"
+                            ProgrStr = pro.ToString() + " %",
+                            Status = mhandle.userInteract.RealTimeData[y].State
                         });
-                        i++;
+                        y++;
                     }
                     Thread.Sleep(100);
                 }
@@ -66,10 +79,6 @@ namespace PROGRAMMATION_SYST_ME.View
             backThread.Start();
 
             Show();
-        }
-        public void ChangeLang()
-        {
-            MsgTextBlock.Text = LocalizedStrings.Message;
         }
         private void GridViewColumnHeader_Click(object sender, RoutedEventArgs e)
         {
@@ -85,5 +94,6 @@ namespace PROGRAMMATION_SYST_ME.View
         public string Name { get; set; }
         public int Progr { get; set; }
         public string ProgrStr { get; set; }
+        public string Status { get; set; }
     }
 }

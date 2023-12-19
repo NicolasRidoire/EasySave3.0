@@ -62,7 +62,7 @@ public static class LanguageManager
             { "ButCancel", "Annuler" },
             { "ButValidate", "Valider" },
             { "SaveInfo1", "Nom" },
-            { "SaveInfo2", "Status" },
+            { "SaveInfo2", "Statut" },
             { "SaveInfo3", "Progression" },
             { "BackupEnd", "Les sauvegardes se sont déroulées sans problème"},
             { "BackupError", "Erreur : Sauvegarde terminée avec le code d'erreur "},

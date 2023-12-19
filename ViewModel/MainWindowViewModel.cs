@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PROGRAMMATION_SYST_ME.ViewModel
 {
@@ -25,6 +26,7 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
         private int indRTime = 0;
         private delegate void CopyType(FileInfo file, string destination);
         CopyType delegCopy;
+        private List<Stopwatch> watch = new ();
         public Mutex Mut { set; get; } = new();
         public bool IsSetup { set; get; } = false;
         public bool IsSaving { set; get; } = false;
@@ -86,6 +88,16 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
             BackupJobs.SaveParam(BackupJobsData);
             return ErrorCode.SUCCESS;
         }
+        private ErrorCode IsBusinessSoftLaunched()
+        {
+            Process[] processes = Process.GetProcessesByName(businessSoft);
+
+            if (processes.Length != 0)
+            {
+                return ErrorCode.BUSINESS_SOFT_LAUNCHED;
+            }
+            return ErrorCode.SUCCESS;
+        }
         /// <summary>
         /// Method to execute backup jobs
         /// </summary>
@@ -95,13 +107,9 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
         {
             IsSaving = true;
             ErrorCode error = ErrorCode.SUCCESS;
-            Process[] processes = Process.GetProcessesByName(businessSoft);
 
-            if (processes.Length != 0)
-            {
-                error = ErrorCode.BUSINESS_SOFT_LAUNCHED;
-                return error;
-            }
+            if (IsBusinessSoftLaunched() == ErrorCode.BUSINESS_SOFT_LAUNCHED)
+                return ErrorCode.BUSINESS_SOFT_LAUNCHED;
 
             SetupRealTime(jobsToExec);
 
@@ -110,25 +118,17 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
             {
                 if (error == ErrorCode.SUCCESS)
                 {
-                    Mut.WaitOne();
                     RealTimeData[indRTime].State = "ACTIVE";
+                    Mut.WaitOne();
                     RealTime.WriteRealTimeFile(RealTimeData);
                     Mut.ReleaseMutex();
                     //Watch is wrong cause of multithreading
-                    var watch = System.Diagnostics.Stopwatch.StartNew();
-                    totalSaveSize = 0;
+                    watch.Add( new Stopwatch());
+                    watch[indRTime].Start();
 
                     GetCopyDeleg(i);
 
                     error = CreateDir(i, indRTime);
-
-                    watch.Stop();
-
-                    LogFile.WriteLogSave(
-                        BackupJobsData[i],
-                        watch.ElapsedMilliseconds,
-                        totalSaveSize
-                    );
                 }
                 else
                     break;
@@ -145,6 +145,7 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
             {
                 int j = int.Parse(t.Name);
                 t.Join();
+                watch[j].Stop();
                 Mut.WaitOne();
                 if (error == ErrorCode.SUCCESS)
                 {
@@ -154,6 +155,11 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
                     RealTimeData[j].State = "ERROR";
                 RealTime.WriteRealTimeFile(RealTimeData);
                 Mut.ReleaseMutex();
+                LogFile.WriteLogSave(
+                        BackupJobsData[jobsToExec[j]],
+                        watch[j].ElapsedMilliseconds,
+                        RealTimeData[j].TotalFilesSize
+                    );
             }
             IsSaving = false;
             return error;
@@ -237,12 +243,8 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
         /// <param name="destination">destination directory</param>
         private void CopyFile(FileInfo file, string destination)
         {
-            Process[] processes = Process.GetProcessesByName(businessSoft);
-            while (processes.Length != 0)
-            {
-                processes = Process.GetProcessesByName(businessSoft);
+            while (IsBusinessSoftLaunched() == ErrorCode.BUSINESS_SOFT_LAUNCHED)
                 Thread.Sleep(50);
-            }
             if (IsCrypt == true)
             {
                 Process process = new Process();
