@@ -26,7 +26,7 @@
 
 
         <StackPanel Background="#FFDAAB3A" Grid.ColumnSpan="5">
-            <TextBlock x:Name="MsgTextBlock" Height="59" Width="660" Text="{x:Static vm:LocalizedStrings.Message}" FontWeight="Bold" FontSize="30"/>
+            <TextBlock x:Name="MsgTextBlock" Height="59" Width="660" Text="{x:Static local:LocalizedStrings.Message}" FontWeight="Bold" FontSize="30"/>
 
         </StackPanel>
 
