@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PROGRAMMATION_SYST_ME.ViewModel
+namespace PROGRAMMATION_SYST_ME.Model
 {
-    public class UpdateWorkJobViewModel
+    public class UpdateWorkJobModel
     {
         public int Id { get; set; }
         public string SaveName { get; set; }

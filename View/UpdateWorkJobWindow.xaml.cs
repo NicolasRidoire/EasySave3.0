@@ -1,6 +1,6 @@
 ﻿using Microsoft.Win32;
+using PROGRAMMATION_SYST_ME.Model;
 using PROGRAMMATION_SYST_ME.Ressources;
-using PROGRAMMATION_SYST_ME.ViewModel;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,7 +13,7 @@ namespace PROGRAMMATION_SYST_ME.View
     public partial class UpdateWorkJobWindow : Window
     {
         private readonly MainWindow handleWin;
-        public UpdateWorkJobViewModel ViewModel { get; set; } = new UpdateWorkJobViewModel();
+        public UpdateWorkJobModel ViewModel { get; set; } = new UpdateWorkJobModel();
         public UpdateWorkJobWindow(MainWindow handleWin)
         {
             this.handleWin = handleWin;
@@ -85,7 +85,6 @@ namespace PROGRAMMATION_SYST_ME.View
         {
             Close();
         }
-
         private void ButtonValidate_Click(object sender, RoutedEventArgs e)
         {
             if (!IsInputValid()){
