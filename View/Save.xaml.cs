@@ -1,6 +1,8 @@
-﻿using System;
+﻿using PROGRAMMATION_SYST_ME.Ressources;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -65,7 +67,10 @@ namespace PROGRAMMATION_SYST_ME.View
 
             Show();
         }
-
+        public void ChangeLang()
+        {
+            MsgTextBlock.Text = LocalizedStrings.Message;
+        }
         private void GridViewColumnHeader_Click(object sender, RoutedEventArgs e)
         {
 

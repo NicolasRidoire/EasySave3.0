@@ -16,8 +16,8 @@ public static class LanguageManager
         {
             { "WelcomeMessage", "Welcome to EasySave, your backup software!" },
             { "Message", "Here is the progress of your save !" },
-            { "BackupInformation", "ID - Name - Backup type" },
-            { "description" ,"Choose your backup"  },
+            { "BackupInformation", "ID | Name of your backups | Backup type" },
+            { "description" ,"Click on the backup(s) you want to run:"  },
             { "language" ,"Choose your language  :" },
             { "create" ,"Create" },
             { "update" ,"Update" },
@@ -45,8 +45,8 @@ public static class LanguageManager
         {
             { "WelcomeMessage", "Bienvenue dans EasySave, votre logiciel de sauvegarde !" },
             { "Message", "Voici l'avancement de vos/votre sauvegarde !" },
-            { "BackupInformation", "ID - Nom - Type" },
-            { "description" ,"Choisissez votre sauvegarde"  },
+            { "BackupInformation", "ID | Nom de vos sauvegardes |    Type de sauvegarde" },
+            { "description" ,"Cliquez sur la ou les sauvegarde(s) que vous voulez executer :"  },
             { "language" ,"Choisissez votre langue : "  },
             { "create" ,"Créer" },
             { "update" ,"Modifier"},
