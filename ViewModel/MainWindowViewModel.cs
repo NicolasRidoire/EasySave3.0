@@ -162,6 +162,7 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
                     );
             }
             IsSaving = false;
+            Threads.Clear();
             return error;
         }
         private void GetCopyDeleg(int i)

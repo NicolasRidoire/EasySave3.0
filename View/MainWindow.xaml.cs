@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Threading;
+using System.Runtime.Serialization;
 
 namespace PROGRAMMATION_SYST_ME.View
 {
@@ -20,7 +21,7 @@ namespace PROGRAMMATION_SYST_ME.View
         public ErrorCode Error { set; get; }
         public readonly MainWindowViewModel userInteract = new();
         private UpdateWorkJobWindow updateWind;
-        public Save SaveWin {  set; get; }
+        public SaveWindow SaveWin {  set; get; }
         public MainWindow()
         {
             Process currentProcess = Process.GetCurrentProcess();
@@ -187,7 +188,7 @@ namespace PROGRAMMATION_SYST_ME.View
             //instance de la classe qui contient la page
             var saveWinThread = new Thread(() =>
             {
-                SaveWin = new Save(this, jobsToExec);
+                SaveWin = new SaveWindow(this, jobsToExec);
                 System.Windows.Threading.Dispatcher.Run();
             });
             saveWinThread.SetApartmentState(ApartmentState.STA);
@@ -201,6 +202,15 @@ namespace PROGRAMMATION_SYST_ME.View
         }
         private void Window_Closing(object sender, CancelEventArgs e)
         {
+            if (SaveWin != null)
+            {
+                if (!SaveWin.End)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+            }
+            
             Environment.Exit(0);
         }
         public static bool IsOpen(Window window)

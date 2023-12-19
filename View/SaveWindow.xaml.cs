@@ -21,12 +21,12 @@ namespace PROGRAMMATION_SYST_ME.View
     /// <summary>
     /// Interaction logic for Save.xaml
     /// </summary>
-    public partial class Save : Window
+    public partial class SaveWindow : Window
     {
         private readonly MainWindow mhandle;
-        private readonly List<int> jobs;
-        private Thread backThread;  
-        public Save(MainWindow handleMain, List<int> jobsToExec)
+        private readonly List<int> jobs; 
+        public bool End { set; get; } = false;
+        public SaveWindow(MainWindow handleMain, List<int> jobsToExec)
         {
             jobs = jobsToExec;
             mhandle = handleMain;
@@ -46,10 +46,9 @@ namespace PROGRAMMATION_SYST_ME.View
                 });
                 i++;
             }
-            backThread = new Thread(() =>
+            Thread backThread = new Thread(() =>
             {
-                bool end = false;
-                while (!end)
+                while (!End)
                 {
                     int y = 0;
                     bool canEnd = true;
@@ -57,10 +56,10 @@ namespace PROGRAMMATION_SYST_ME.View
                     {
                         int pro = (int)mhandle.userInteract.RealTimeData[y].Progression;
                         if (pro == 100 && canEnd)
-                            end = true;
+                            End = true;
                         else
                         {
-                            end = false;
+                            End = false;
                             canEnd = false;
                         }
 
@@ -80,12 +79,14 @@ namespace PROGRAMMATION_SYST_ME.View
 
             Show();
         }
-        private void GridViewColumnHeader_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            if (!End)
+            {
+                e.Cancel = true;
+                return;
+            }
+
             mhandle.SaveWin = null;
         }
     }
