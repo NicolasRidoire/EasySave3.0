@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "EasySave": {
+      "commandName": "Project",
+      "sqlDebugging": false,
+      "nativeDebugging": false
+    }
+  }
+}
