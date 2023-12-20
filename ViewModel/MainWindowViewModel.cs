@@ -13,9 +13,7 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
 {
     public class MainWindowViewModel
     { 
-        // TODO : File size threshold -> working, need user input for as parameter (UI)
         // TODO : Add socket server and client to save page
-        // TODO : Buttons Stop Pause and Continue
         private long totalSaveSize = 0;
         private long totalNbFile = 0;
         private List<long> NbFilesCopied = new();
@@ -152,10 +150,6 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
             {
                 if (error == ErrorCode.SUCCESS)
                 {
-                    RealTimeData[indRTime].State = "ACTIVE";
-                    Mut.WaitOne();
-                    RealTime.WriteRealTimeFile(RealTimeData);
-                    Mut.ReleaseMutex();
                     watch.Add(new Stopwatch());
                     watch[indRTime].Start();
 
@@ -178,11 +172,12 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
             {
                 int j = int.Parse(t.Name);
                 t.Join();
-                watch[j].Stop();
+                watch[j].Stop();   
                 Mut.WaitOne();
                 if (error == ErrorCode.SUCCESS)
                 {
-                    RealTimeData[j].State = "SUCCESSFUL";
+                    if (RealTimeData[j].Progression == 100)
+                        RealTimeData[j].State = "SUCCESSFUL";
                 }
                 else
                     RealTimeData[j].State = "ERROR";
@@ -318,14 +313,15 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
             while (IsBusinessSoftLaunched() == ErrorCode.BUSINESS_SOFT_LAUNCHED)
                 Thread.Sleep(50);
             var ind = 0;
-            if (ThreadStop[ind])
-                return;
             if (Threads.Count > 0)
-                ind = int.Parse(Thread.CurrentThread.Name);
-            while (ThreadPause[ind])
             {
-                Thread.Sleep(100);
+                ind = int.Parse(Thread.CurrentThread.Name);
+                if (ThreadStop[ind])
+                    return;
+                while (ThreadPause[ind])
+                    Thread.Sleep(100);
             }
+            
             if (IsCrypt == true)
             {
                 Process process = new Process();
@@ -343,7 +339,6 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
 
             if (Threads.Count < 1)
                 return;
-            ind = int.Parse(Thread.CurrentThread.Name);
             NbFilesCopied[ind]++;
             RealTimeData[ind].NbFilesLeftToDo = RealTimeData[ind].TotalFilesToCopy - NbFilesCopied[ind];
             RealTimeData[ind].Progression = (double)NbFilesCopied[ind] / (double)RealTimeData[ind].TotalFilesToCopy * 100;
@@ -381,7 +376,7 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
                 RealTimeData.Add(new RealTimeDataModel());
                 NbFilesCopied.Add(0);
                 RealTimeData[indRTime].SaveData = BackupJobsData[i];
-                RealTimeData[indRTime].State = "WAITING";
+                RealTimeData[indRTime].State = "ACTIVE";
                 if (Directory.Exists(BackupJobsData[i].Source))
                 {
                     totalNbFile = 0;

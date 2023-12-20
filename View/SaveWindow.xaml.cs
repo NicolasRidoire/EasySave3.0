@@ -1,4 +1,5 @@
 ﻿using PROGRAMMATION_SYST_ME.Ressources;
+using PROGRAMMATION_SYST_ME.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,9 @@ namespace PROGRAMMATION_SYST_ME.View
     public partial class SaveWindow : Window
     {
         private readonly MainWindow mhandle;
-        private readonly List<int> jobs; 
+        private readonly List<int> jobs;
+        private SaveWindowViewModel viewModel = new();
+        private List<Item> itemList = new();
         public bool End { set; get; } = false;
         public SaveWindow(MainWindow handleMain, List<int> jobsToExec)
         {
@@ -37,7 +40,7 @@ namespace PROGRAMMATION_SYST_ME.View
             foreach (var job in jobs)
             {
                 int pro = (int)(mhandle.userInteract.RealTimeData[i].Progression * 100);
-                ProgressListView.Items.Add(new Item
+                itemList.Add(new Item
                 {
                     Id = i,
                     Name = mhandle.userInteract.BackupJobsData[job].Name,
@@ -45,6 +48,8 @@ namespace PROGRAMMATION_SYST_ME.View
                     ProgrStr = pro.ToString() + " %",
                     Status = mhandle.userInteract.RealTimeData[i].State
                 });
+                ProgressListView.Items.Add(itemList[i]);
+                viewModel.SendInfoToSocket(itemList);
                 i++;
             }
             Thread backThread = new Thread(() =>
@@ -56,22 +61,23 @@ namespace PROGRAMMATION_SYST_ME.View
                     foreach (var job in jobs)
                     {
                         int pro = (int)mhandle.userInteract.RealTimeData[y].Progression;
-                    if ((pro == 100 && canEnd) || mhandle.userInteract.ThreadStop[y])
+                        if ((pro == 100 && canEnd) || mhandle.userInteract.ThreadStop[y])
                             End = true;
                         else
                         {
                             End = false;
                             canEnd = false;
                         }
-
-                        this.Dispatcher.Invoke(() => ProgressListView.Items[y] = new Item
+                        itemList[y] = new Item
                         {
                             Id = y,
                             Name = mhandle.userInteract.BackupJobsData[job].Name,
                             Progr = pro,
                             ProgrStr = pro.ToString() + " %",
                             Status = mhandle.userInteract.RealTimeData[y].State
-                        });
+                        };
+                        this.Dispatcher.Invoke(() => ProgressListView.Items[y] = itemList[y]);
+                        viewModel.SendInfoToSocket(itemList);
                         y++;
                     }
                     Thread.Sleep(100);
@@ -88,12 +94,17 @@ namespace PROGRAMMATION_SYST_ME.View
                 e.Cancel = true;
                 return;
             }
-
+            itemList.Clear();
+            viewModel.StopConnexion = true;
+            viewModel.serv.Disconnect(viewModel.Connected);
+            viewModel.socket1.Dispose();
             mhandle.SaveWin = null;
         }
 
         private void ButtonPause_Click(object sender, RoutedEventArgs e)
         {
+            if (End)
+                return;
             int id = (int)((Button)sender).Tag;
             mhandle.userInteract.ThreadPause[id] = true;
             mhandle.userInteract.RealTimeData[id].State = "PAUSED";
@@ -102,6 +113,8 @@ namespace PROGRAMMATION_SYST_ME.View
 
         private void ButtonStop_Click(object sender, RoutedEventArgs e)
         {
+            if (End)
+                return;
             int id = (int)((Button)sender).Tag;
             mhandle.userInteract.ThreadStop[id] = true;
             mhandle.userInteract.RealTimeData[id].State = "CANCELED";
@@ -110,6 +123,8 @@ namespace PROGRAMMATION_SYST_ME.View
 
         private void ButtonContinue_Click(object sender, RoutedEventArgs e)
         {
+            if (End)
+                return;
             int id = (int)((Button)sender).Tag;
             mhandle.userInteract.ThreadPause[id] = false;
             mhandle.userInteract.RealTimeData[id].State = "ACTIVE";
