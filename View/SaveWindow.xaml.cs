@@ -39,6 +39,7 @@ namespace PROGRAMMATION_SYST_ME.View
                 int pro = (int)(mhandle.userInteract.RealTimeData[i].Progression * 100);
                 ProgressListView.Items.Add(new Item
                 {
+                    Id = i,
                     Name = mhandle.userInteract.BackupJobsData[job].Name,
                     Progr = pro,
                     ProgrStr = pro.ToString() + " %",
@@ -55,7 +56,7 @@ namespace PROGRAMMATION_SYST_ME.View
                     foreach (var job in jobs)
                     {
                         int pro = (int)mhandle.userInteract.RealTimeData[y].Progression;
-                        if (pro == 100 && canEnd)
+                    if ((pro == 100 && canEnd) || mhandle.userInteract.ThreadStop[y])
                             End = true;
                         else
                         {
@@ -65,6 +66,7 @@ namespace PROGRAMMATION_SYST_ME.View
 
                         this.Dispatcher.Invoke(() => ProgressListView.Items[y] = new Item
                         {
+                            Id = y,
                             Name = mhandle.userInteract.BackupJobsData[job].Name,
                             Progr = pro,
                             ProgrStr = pro.ToString() + " %",
@@ -89,9 +91,40 @@ namespace PROGRAMMATION_SYST_ME.View
 
             mhandle.SaveWin = null;
         }
+
+        private void ButtonPause_Click(object sender, RoutedEventArgs e)
+        {
+            int id = (int)((Button)sender).Tag;
+            mhandle.userInteract.ThreadPause[id] = true;
+            mhandle.userInteract.RealTimeData[id].State = "PAUSED";
+            UpdateRealTime();
+        }
+
+        private void ButtonStop_Click(object sender, RoutedEventArgs e)
+        {
+            int id = (int)((Button)sender).Tag;
+            mhandle.userInteract.ThreadStop[id] = true;
+            mhandle.userInteract.RealTimeData[id].State = "CANCELED";
+            UpdateRealTime();
+        }
+
+        private void ButtonContinue_Click(object sender, RoutedEventArgs e)
+        {
+            int id = (int)((Button)sender).Tag;
+            mhandle.userInteract.ThreadPause[id] = false;
+            mhandle.userInteract.RealTimeData[id].State = "ACTIVE";
+            UpdateRealTime();
+        }
+        private void UpdateRealTime()
+        {
+            mhandle.userInteract.Mut.WaitOne();
+            mhandle.userInteract.RealTime.WriteRealTimeFile(mhandle.userInteract.RealTimeData);
+            mhandle.userInteract.Mut.ReleaseMutex();
+        }
     }
     public class Item()
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public int Progr { get; set; }
         public string ProgrStr { get; set; }

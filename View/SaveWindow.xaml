@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PROGRAMMATION_SYST_ME.Ressources"
         xmlns:vm="clr-namespace:PROGRAMMATION_SYST_ME.Ressources"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d"
         Title="Save" Height="450" Width="800" Background="#FFDAAB3A"
         MinWidth="950" MinHeight="620"
@@ -82,7 +83,24 @@
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
 
-                        <GridViewColumn x:Name="ProgressBarHeader"  Header="{x:Static local:LocalizedStrings.SaveInfo2}" Width="250" DisplayMemberBinding="{Binding Status}"/>
+                        <GridViewColumn x:Name="ProgressBarHeader"  Header="{x:Static local:LocalizedStrings.SaveInfo2}" Width="250">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Width="250">
+                                        <Label Content="{Binding Status}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                        <Button x:Name="ButtonPause" Tag="{Binding Id}" Width="30" Height="30" Margin="5,0,0,0" Click="ButtonPause_Click" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                            <fa:ImageAwesome Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Center" Icon="Pause"/>
+                                        </Button>
+                                        <Button x:Name="ButtonContinue" Tag="{Binding Id}" Width="30" Height="30" Margin="5,0,0,0" Click="ButtonContinue_Click" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                            <fa:ImageAwesome Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Center" Icon="Play"/>
+                                        </Button>
+                                        <Button x:Name="ButtonStop" Tag="{Binding Id}" Width="30" Height="30" Margin="5,0,0,0" Click="ButtonStop_Click" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                            <fa:ImageAwesome Width="20" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center" Icon="Stop"/>
+                                        </Button>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
                     </GridView>
                 </ListView.View>
             </ListView>

@@ -14,6 +14,7 @@ using System.Linq;
 using System.Windows.Threading;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
+using System.Windows.Input;
 
 namespace PROGRAMMATION_SYST_ME.View
 {
@@ -46,6 +47,7 @@ namespace PROGRAMMATION_SYST_ME.View
                 json.IsChecked = true;
             else
                 xml.IsChecked = true;
+            userInteract.SizeThreshold = long.Parse(SizeTTextBox.Text);
         }
 
         private void RadioButton_Checked(object sender, RoutedEventArgs e)
@@ -59,6 +61,11 @@ namespace PROGRAMMATION_SYST_ME.View
                 updateWind.ChangeLang();
 
             UpdateUI();
+        }
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
         }
 
         private static void ChangeLanguage(string language)
@@ -80,6 +87,7 @@ namespace PROGRAMMATION_SYST_ME.View
             LanguageTextBlock.Text = LocalizedStrings.Language;
             DescriptionTextBlock.Text = LocalizedStrings.Description;
             ExtensionLabel.Content = LocalizedStrings.ExtLabel;
+            SizeTLabel.Content = LocalizedStrings.SizeThreshLabel;
             var i = 0;
             foreach (BackupJobDataModel job in userInteract.BackupJobsData)
             {
@@ -180,17 +188,19 @@ namespace PROGRAMMATION_SYST_ME.View
             else
                 return;
 
+            if (SizeTTextBox.Text != "")
+                userInteract.SizeThreshold = long.Parse(SizeTTextBox.Text);
+            else
+                userInteract.SizeThreshold = 0;
             List<int> jobsToExec = new();
             foreach (var item in BackupList.SelectedItems)
             {
                 jobsToExec.Add((item.ToString()[0] - '0') - 1);
             }
 
-            //thread et lancer la page
-
             Thread thread = new Thread (() => Error = userInteract.ExecuteJob(jobsToExec, extPrio));
             thread.Start();
-            //instance de la classe qui contient la page
+
             var saveWinThread = new Thread(() =>
             {
                 SaveWin = new SaveWindow(this, jobsToExec);

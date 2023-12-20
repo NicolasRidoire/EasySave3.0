@@ -13,13 +13,9 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
 {
     public class MainWindowViewModel
     { 
-        //JB: Les champs privés se trouvent toujours en début de classe pour la lisibilité du code
-        // Voici un ordre qui est recommendé: 
-        // 1) Champs privés
-        // 2) Constructeurs
-        // 3) Propriétés publiques
-        // 4) Méthodes publiques
-        // 5) Méthodes privées
+        // TODO : File size threshold -> working, need user input for as parameter (UI)
+        // TODO : Add socket server and client to save page
+        // TODO : Buttons Stop Pause and Continue
         private long totalSaveSize = 0;
         private long totalNbFile = 0;
         private List<long> NbFilesCopied = new();
@@ -28,9 +24,13 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
         CopyType delegCopy;
         private List<Stopwatch> watch = new ();
         private List<string> filePrioList = new();
+        private List<string> fileCopied = new();
         public Mutex Mut { set; get; } = new();
         public bool IsSetup { set; get; } = false;
         public bool IsSaving { set; get; } = false;
+        public long SizeThreshold { set; get; } = 100000; // En bytes
+        public List<bool> ThreadPause { set; get; } = new List<bool>();
+        public List<bool> ThreadStop { set; get; } = new List<bool>();
 
         private readonly string businessSoft = "CalculatorApp";
         public MainWindowViewModel()
@@ -111,6 +111,9 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
             ErrorCode error = ErrorCode.SUCCESS;
             extPrioList.Clear();
             filePrioList.Clear();
+            fileCopied.Clear();
+            ThreadPause.Clear();
+            ThreadStop.Clear();
             if (extPrioString.Length > 3)
             {
                 foreach (string ext in extPrioString.Split(';'))
@@ -126,16 +129,23 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
             if (IsBusinessSoftLaunched() == ErrorCode.BUSINESS_SOFT_LAUNCHED)
                 return ErrorCode.BUSINESS_SOFT_LAUNCHED;
 
-            indRTime = 0;
             foreach (int i in jobsToExec)
             {
                 GetCopyDeleg(i);
                 CreateDir(BackupJobsData[i].Source, BackupJobsData[i].Destination, delegCopy);
-
-                indRTime++;
+                ThreadStop.Add(false);
+                ThreadPause.Add(false);
             }
 
             SetupRealTime(jobsToExec);
+
+            indRTime = 0;
+            foreach (int i in jobsToExec)
+            {
+                delegCopy = CopyPriorityFiles;
+                SaveDir(BackupJobsData[i].Source, BackupJobsData[i].Destination, delegCopy);
+                indRTime++;
+            }
 
             indRTime = 0;
             foreach (int i in jobsToExec)
@@ -244,13 +254,34 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
         /// <param name="destination">null by default (only here for delegate)</param>
         private void GetDirectoryInfo(FileInfo file, string destination)
         {
-            foreach (string ext in extPrioList)
-            {
-                if (file.Extension == ('.' + ext))
-                    CopyFile(file, destination);
-            }
             totalSaveSize += file.Length;
             totalNbFile++;
+        }
+        private void CopyPriorityFiles(FileInfo file, string destination)
+        {
+            bool toCopy = false;
+            if (file.Length > SizeThreshold)
+            {
+                toCopy = true;
+            }
+            else
+            {
+                foreach (string ext in extPrioList)
+                {
+                    if (file.Extension == ('.' + ext))
+                    {
+                        toCopy = true;
+                    }
+                }
+            }
+            if (!toCopy)
+                return;
+            CopyFile(file, destination);
+            fileCopied.Add(file.FullName);
+            NbFilesCopied[indRTime]++;
+            RealTimeData[indRTime].NbFilesLeftToDo = RealTimeData[indRTime].TotalFilesToCopy - NbFilesCopied[indRTime];
+            RealTimeData[indRTime].Progression = (double)NbFilesCopied[indRTime] / (double)RealTimeData[indRTime].TotalFilesToCopy * 100;
+            RealTime.WriteRealTimeFile(RealTimeData);
         }
         /// <summary>
         /// Go through a directory recursively and use a delegate 
@@ -267,7 +298,8 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
 
             foreach (FileInfo file in dir.GetFiles())
             {
-                 deleg(file, destination);
+                if (!fileCopied.Contains(file.FullName))
+                    deleg(file, destination);
             }
 
             foreach (DirectoryInfo subDir in dirs)
@@ -285,6 +317,15 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
         {
             while (IsBusinessSoftLaunched() == ErrorCode.BUSINESS_SOFT_LAUNCHED)
                 Thread.Sleep(50);
+            var ind = 0;
+            if (ThreadStop[ind])
+                return;
+            if (Threads.Count > 0)
+                ind = int.Parse(Thread.CurrentThread.Name);
+            while (ThreadPause[ind])
+            {
+                Thread.Sleep(100);
+            }
             if (IsCrypt == true)
             {
                 Process process = new Process();
@@ -302,7 +343,7 @@ namespace PROGRAMMATION_SYST_ME.ViewModel
 
             if (Threads.Count < 1)
                 return;
-            var ind = int.Parse(Thread.CurrentThread.Name);
+            ind = int.Parse(Thread.CurrentThread.Name);
             NbFilesCopied[ind]++;
             RealTimeData[ind].NbFilesLeftToDo = RealTimeData[ind].TotalFilesToCopy - NbFilesCopied[ind];
             RealTimeData[ind].Progression = (double)NbFilesCopied[ind] / (double)RealTimeData[ind].TotalFilesToCopy * 100;

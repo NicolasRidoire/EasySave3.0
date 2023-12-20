@@ -39,7 +39,8 @@ public static class LanguageManager
             { "BackupError", "Error : Backup ended with error code " },
             { "Crypt", "Do you want to encrypt your backups ?" },
             { "NameUsed", "Already used" },
-            { "ExtLabel", "Choose priority extension (format : exe;txt;...) :" }
+            { "ExtLabel", "Choose priority extension (format : exe;txt;...) :" },
+            { "SizeThreshLabel", "Choose the size threshold for sequencial copy in bit :" }
         };
 
         languages["fr-FR"] = new Dictionary<string, string>
@@ -69,7 +70,8 @@ public static class LanguageManager
             { "BackupError", "Erreur : Sauvegarde terminée avec le code d'erreur "},
             { "Crypt", "Voulez-vous chiffrer vos sauvegardes ?" },
             { "NameUsed", "Déjà utilisé" },
-            { "ExtLabel", "Choisissez les extensions priotitaires (format : exe;txt;...) :" }
+            { "ExtLabel", "Choisissez les extensions priotitaires (format : exe;txt;...) :" },
+            { "SizeThreshLabel", "Choisissez la taille maximum pour copy sequentielle en bit :" }
 
         };
     }

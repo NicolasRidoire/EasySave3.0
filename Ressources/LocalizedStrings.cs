@@ -35,6 +35,7 @@ namespace PROGRAMMATION_SYST_ME.Ressources
         public static string Crypt => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "Crypt");
         public static string NameUsed => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "NameUsed");
         public static string ExtLabel => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "ExtLabel");
+        public static string SizeThreshLabel => LanguageManager.GetLocalizedString(Thread.CurrentThread.CurrentUICulture.Name, "SizeThreshLabel");
 
 
 
